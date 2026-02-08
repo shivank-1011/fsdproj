@@ -34,6 +34,8 @@ model User {
   store     Store?
   cart      Cart?
   orders    Order[]
+  
+  refreshToken String?
 }
 
 model Store {
