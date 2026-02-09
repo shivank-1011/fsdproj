@@ -16,7 +16,12 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 const authRoutes = require("./src/routes/authRoutes");
+const storeRoutes = require("./src/routes/storeRoutes");
+const productRoutes = require("./src/routes/productRoutes");
+
 app.use("/api/auth", authRoutes);
+app.use("/api/stores", storeRoutes);
+app.use("/api/products", productRoutes);
 
 app.get("/", (req, res) => {
   res.send("Welcome to the E-Commerce API");
