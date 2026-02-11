@@ -16,6 +16,12 @@ const createProduct = async (req, res) => {
         .json({ error: "Store not found. Create a store first." });
     }
 
+    if (!store.isVerified) {
+      return res.status(403).json({
+        error: "Store is not verified. Please wait for admin approval.",
+      });
+    }
+
     const product = await prisma.product.create({
       data: {
         name,

@@ -5,7 +5,7 @@ const createStore = async (req, res) => {
   try {
     const { name, description } = req.body;
     const userId = req.user.userId;
-    
+
     const existingStore = await prisma.store.findUnique({
       where: { userId },
     });
@@ -75,9 +75,29 @@ const deleteStore = async (req, res) => {
   }
 };
 
+const getStoreByOwner = async (req, res) => {
+  try {
+    const userId = req.user.userId;
+
+    const store = await prisma.store.findUnique({
+      where: { userId },
+      include: { products: true },
+    });
+
+    if (!store) {
+      return res.status(404).json({ error: "Store not found" });
+    }
+
+    res.json({ store });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
 module.exports = {
   createStore,
   getStore,
+  getStoreByOwner,
   updateStore,
   deleteStore,
 };

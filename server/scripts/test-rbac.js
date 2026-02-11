@@ -63,7 +63,7 @@ const runTests = async () => {
     "SELLER",
   );
 
-  console.log("✅ Authentication successful for all roles");
+  console.log("Authentication successful for all roles");
 
   let storeId;
   let productId;
@@ -79,10 +79,10 @@ const runTests = async () => {
       { headers: { Authorization: `Bearer ${sellerToken}` } },
     );
     storeId = res.data.store.id;
-    console.log("✅ Seller created store");
+    console.log("Seller created store");
   } catch (error) {
     console.error(
-      "❌ Seller failed to create store:",
+      "Seller failed to create store:",
       error.response?.data || error.message,
     );
   }
@@ -97,13 +97,13 @@ const runTests = async () => {
       },
       { headers: { Authorization: `Bearer ${userToken}` } },
     );
-    console.error("❌ User managed to create store (Should have failed)");
+    console.error("User managed to create store (Should have failed)");
   } catch (error) {
     if (error.response?.status === 403) {
-      console.log("✅ User blocked from creating store");
+      console.log("User blocked from creating store");
     } else {
       console.error(
-        "❌ Unexpected error for user creating store:",
+        "Unexpected error for user creating store:",
         error.response?.status,
       );
     }
@@ -123,10 +123,10 @@ const runTests = async () => {
       { headers: { Authorization: `Bearer ${sellerToken}` } },
     );
     productId = res.data.product.id;
-    console.log("✅ Seller added product to own store");
+    console.log("Seller added product to own store");
   } catch (error) {
     console.error(
-      "❌ Seller failed to add product:",
+      "Seller failed to add product:",
       error.response?.data || error.message,
     );
   }
@@ -138,13 +138,13 @@ const runTests = async () => {
       { name: "Hacked Product" },
       { headers: { Authorization: `Bearer ${userToken}` } },
     );
-    console.error("❌ User updated seller's product (Should have failed)");
+    console.error("User updated seller's product (Should have failed)");
   } catch (error) {
     if (error.response?.status === 403) {
-      console.log("✅ User blocked from updating seller's product");
+      console.log("User blocked from updating seller's product");
     } else {
       console.error(
-        "❌ Unexpected error for user updating product:",
+        "Unexpected error for user updating product:",
         error.response?.status,
       );
     }
@@ -157,13 +157,13 @@ const runTests = async () => {
       { name: "Competitor Hack" },
       { headers: { Authorization: `Bearer ${seller2Token}` } },
     );
-    console.error("❌ Seller2 updated Seller1's product (Should have failed)");
+    console.error("Seller2 updated Seller1's product (Should have failed)");
   } catch (error) {
     if (error.response?.status === 403) {
-      console.log("✅ Seller2 blocked from updating Seller1's product");
+      console.log("Seller2 blocked from updating Seller1's product");
     } else {
       console.error(
-        "❌ Unexpected error for Seller2 updating product:",
+        "Unexpected error for Seller2 updating product:",
         error.response?.status,
       );
     }
@@ -174,10 +174,10 @@ const runTests = async () => {
     await axios.delete(`${API_URL}/products/${productId}`, {
       headers: { Authorization: `Bearer ${adminToken}` },
     });
-    console.log("✅ Admin deleted seller's product");
+    console.log("Admin deleted seller's product");
   } catch (error) {
     console.error(
-      "❌ Admin failed to delete product:",
+      "Admin failed to delete product:",
       error.response?.data || error.message,
     );
   }

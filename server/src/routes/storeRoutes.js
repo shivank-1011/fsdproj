@@ -2,6 +2,7 @@ const express = require("express");
 const {
   createStore,
   getStore,
+  getStoreByOwner,
   updateStore,
   deleteStore,
 } = require("../controllers/storeController");
@@ -18,6 +19,13 @@ router.post(
   authenticateToken,
   authorizeRoles("SELLER", "ADMIN"),
   createStore,
+);
+
+router.get(
+  "/me",
+  authenticateToken,
+  authorizeRoles("SELLER", "ADMIN"),
+  getStoreByOwner,
 );
 
 router.get("/:id", authenticateToken, getStore);
