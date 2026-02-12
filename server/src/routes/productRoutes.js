@@ -1,6 +1,7 @@
 const express = require("express");
 const {
   createProduct,
+  getProducts,
   getProduct,
   updateProduct,
   deleteProduct,
@@ -19,7 +20,8 @@ router.post(
   createProduct,
 );
 
-router.get("/:id", authenticateToken, getProduct);
+router.get("/", getProducts);
+router.get("/:id", getProduct);
 
 router.put(
   "/:id",

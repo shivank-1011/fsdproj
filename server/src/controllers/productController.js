@@ -39,6 +39,66 @@ const createProduct = async (req, res) => {
   }
 };
 
+const getProducts = async (req, res) => {
+  try {
+    const {
+      page = 1,
+      limit = 10,
+      search,
+      minPrice,
+      maxPrice,
+      sortBy,
+      order = "asc",
+    } = req.query;
+
+    const pageNum = parseInt(page);
+    const limitNum = parseInt(limit);
+    const skip = (pageNum - 1) * limitNum;
+
+    const where = {};
+
+    if (search) {
+      where.OR = [
+        { name: { contains: search, mode: "insensitive" } },
+        { description: { contains: search, mode: "insensitive" } },
+      ];
+    }
+
+    if (minPrice || maxPrice) {
+      where.price = {};
+      if (minPrice) where.price.gte = parseFloat(minPrice);
+      if (maxPrice) where.price.lte = parseFloat(maxPrice);
+    }
+
+    const orderBy = {};
+    if (sortBy) {
+      orderBy[sortBy] = order === "desc" ? "desc" : "asc";
+    } else {
+      orderBy.createdAt = "desc";
+    }
+
+    const [products, total] = await Promise.all([
+      prisma.product.findMany({
+        where,
+        skip,
+        take: limitNum,
+        orderBy,
+        include: { store: { select: { name: true } } },
+      }),
+      prisma.product.count({ where }),
+    ]);
+
+    res.json({
+      products,
+      total,
+      page: pageNum,
+      totalPages: Math.ceil(total / limitNum),
+    });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
 const getProduct = async (req, res) => {
   try {
     const product = await prisma.product.findUnique({
@@ -94,6 +154,7 @@ const deleteProduct = async (req, res) => {
 
 module.exports = {
   createProduct,
+  getProducts,
   getProduct,
   updateProduct,
   deleteProduct,
