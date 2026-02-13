@@ -1,4 +1,5 @@
 const { PrismaClient } = require("@prisma/client");
+const cloudinary = require("../config/cloudinary");
 const prisma = new PrismaClient();
 
 const createProduct = async (req, res) => {
@@ -22,13 +23,46 @@ const createProduct = async (req, res) => {
       });
     }
 
+    let imageUrls = [];
+    if (req.files && req.files.length > 0) {
+      const uploadPromises = req.files.map((file) => {
+        return new Promise((resolve, reject) => {
+          const uploadStream = cloudinary.uploader.upload_stream(
+            {
+              resource_type: "image",
+              folder: "products",
+              transformation: [
+                { width: 1000, crop: "scale" },
+                { quality: "auto" },
+                { fetch_format: "auto" },
+              ],
+            },
+            (error, result) => {
+              if (error) reject(error);
+              else resolve(result.secure_url);
+            },
+          );
+          uploadStream.end(file.buffer);
+        });
+      });
+      imageUrls = await Promise.all(uploadPromises);
+    }
+
+    if (images) {
+      if (Array.isArray(images)) {
+        imageUrls = [...imageUrls, ...images];
+      } else {
+        imageUrls.push(images);
+      }
+    }
+
     const product = await prisma.product.create({
       data: {
         name,
         description,
         price,
-        stock,
-        images,
+        stock: parseInt(stock), // Ensure stock is an integer
+        images: imageUrls,
         storeId: store.id,
       },
     });

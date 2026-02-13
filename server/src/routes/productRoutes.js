@@ -11,12 +11,14 @@ const {
   authorizeRoles,
   checkProductOwnership,
 } = require("../middleware/authMiddleware");
+const upload = require("../middleware/uploadMiddleware");
 
 const router = express.Router();
 router.post(
   "/",
   authenticateToken,
   authorizeRoles("SELLER", "ADMIN"),
+  upload.array("images", 5),
   createProduct,
 );
 
