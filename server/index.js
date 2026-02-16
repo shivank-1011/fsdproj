@@ -24,6 +24,7 @@ app.use("/api/stores", storeRoutes);
 app.use("/api/products", productRoutes);
 app.use("/api/cart", require("./src/routes/cartRoutes"));
 app.use("/api/orders", require("./src/routes/orderRoutes"));
+app.use("/api/admin", require("./src/routes/adminRoutes"));
 
 app.get("/", (req, res) => {
   res.send("Welcome to the E-Commerce API");
