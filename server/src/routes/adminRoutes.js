@@ -5,6 +5,7 @@ const {
   unbanUser,
   approveStore,
   getAllStores,
+  getDashboardStats,
 } = require("../controllers/adminController");
 const {
   authenticateToken,
@@ -15,6 +16,7 @@ const router = express.Router();
 
 router.use(authenticateToken, authorizeRoles("ADMIN"));
 
+router.get("/dashboard", getDashboardStats);
 router.get("/users", getAllUsers);
 router.post("/users/ban", banUser);
 router.post("/users/unban", unbanUser);

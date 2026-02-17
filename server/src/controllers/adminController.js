@@ -82,10 +82,61 @@ const getAllStores = async (req, res) => {
   }
 };
 
+const getDashboardStats = async (req, res) => {
+  try {
+    const [totalUsers, totalSellers, totalSales, totalOrders, topProducts] =
+      await prisma.$transaction([
+        prisma.user.count({ where: { role: "USER" } }),
+        prisma.user.count({ where: { role: "SELLER" } }),
+        prisma.order.aggregate({
+          _sum: { total: true },
+          where: { status: { not: "CANCELLED" } },
+        }),
+        prisma.order.count(),
+        prisma.orderItem.groupBy({
+          by: ["productId"],
+          _sum: {
+            quantity: true,
+          },
+          orderBy: {
+            _sum: {
+              quantity: "desc",
+            },
+          },
+          take: 5,
+        }),
+      ]);
+
+    const enrichedTopProducts = await Promise.all(
+      topProducts.map(async (item) => {
+        const product = await prisma.product.findUnique({
+          where: { id: item.productId },
+          select: { name: true, price: true, images: true },
+        });
+        return {
+          ...product,
+          totalSold: item._sum.quantity,
+        };
+      }),
+    );
+
+    res.json({
+      totalUsers,
+      totalSellers,
+      totalSales: totalSales._sum.total || 0,
+      totalOrders,
+      topProducts: enrichedTopProducts,
+    });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
 module.exports = {
   getAllUsers,
   banUser,
   unbanUser,
   approveStore,
   getAllStores,
+  getDashboardStats,
 };
