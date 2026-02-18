@@ -3,23 +3,37 @@ const prisma = new PrismaClient();
 
 const getAllUsers = async (req, res) => {
   try {
-    const users = await prisma.user.findMany({
-      select: {
-        id: true,
-        name: true,
-        email: true,
-        role: true,
-        isBanned: true,
-        createdAt: true,
-        store: {
-          select: {
-            id: true,
-            name: true,
+    const { page = 1, limit = 10 } = req.query;
+    const skip = (Number(page) - 1) * Number(limit);
+
+    const [users, total] = await Promise.all([
+      prisma.user.findMany({
+        skip,
+        take: Number(limit),
+        select: {
+          id: true,
+          name: true,
+          email: true,
+          role: true,
+          isBanned: true,
+          createdAt: true,
+          store: {
+            select: {
+              id: true,
+              name: true,
+            },
           },
         },
-      },
+      }),
+      prisma.user.count(),
+    ]);
+
+    res.json({
+      users,
+      total,
+      page: Number(page),
+      totalPages: Math.ceil(total / Number(limit)),
     });
-    res.json(users);
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
@@ -66,17 +80,31 @@ const approveStore = async (req, res) => {
 
 const getAllStores = async (req, res) => {
   try {
-    const stores = await prisma.store.findMany({
-      include: {
-        user: {
-          select: {
-            name: true,
-            email: true,
+    const { page = 1, limit = 10 } = req.query;
+    const skip = (Number(page) - 1) * Number(limit);
+
+    const [stores, total] = await Promise.all([
+      prisma.store.findMany({
+        skip,
+        take: Number(limit),
+        include: {
+          user: {
+            select: {
+              name: true,
+              email: true,
+            },
           },
         },
-      },
+      }),
+      prisma.store.count(),
+    ]);
+
+    res.json({
+      stores,
+      total,
+      page: Number(page),
+      totalPages: Math.ceil(total / Number(limit)),
     });
-    res.json(stores);
   } catch (error) {
     res.status(500).json({ error: error.message });
   }

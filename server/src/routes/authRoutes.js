@@ -7,11 +7,16 @@ const {
   me,
 } = require("../controllers/authController");
 const { authenticateToken } = require("../middleware/authMiddleware");
+const validate = require("../middleware/validate");
+const {
+  registerSchema,
+  loginSchema,
+} = require("../validations/authValidation");
 
 const router = express.Router();
 
-router.post("/register", register);
-router.post("/login", login);
+router.post("/register", validate(registerSchema), register);
+router.post("/login", validate(loginSchema), login);
 router.post("/refresh-token", refreshToken);
 router.post("/logout", logout);
 router.get("/me", authenticateToken, me);

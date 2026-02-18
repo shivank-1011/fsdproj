@@ -86,6 +86,41 @@ const createOrder = async (req, res) => {
   }
 };
 
+const getUserOrders = async (req, res) => {
+  try {
+    const userId = req.user.userId;
+    const { page = 1, limit = 10 } = req.query;
+    const skip = (Number(page) - 1) * Number(limit);
+
+    const [orders, total] = await Promise.all([
+      prisma.order.findMany({
+        where: { userId },
+        skip,
+        take: Number(limit),
+        orderBy: { createdAt: "desc" },
+        include: {
+          items: {
+            include: {
+              product: true,
+            },
+          },
+        },
+      }),
+      prisma.order.count({ where: { userId } }),
+    ]);
+
+    res.json({
+      orders,
+      total,
+      page: Number(page),
+      totalPages: Math.ceil(total / Number(limit)),
+    });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
 module.exports = {
   createOrder,
+  getUserOrders,
 };
