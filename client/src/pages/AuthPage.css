@@ -1,0 +1,404 @@
+/* Main Container */
+.auth-container {
+  display: flex;
+  min-height: 100vh;
+  align-items: center;
+  justify-content: center;
+  padding: var(--spacing-4);
+  position: relative;
+  overflow: hidden;
+}
+
+/* Glassmorphism Card (The Frame) */
+.auth-card {
+  background: var(--glass-bg);
+  backdrop-filter: blur(var(--glass-blur));
+  -webkit-backdrop-filter: blur(var(--glass-blur));
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--glass-shadow);
+
+  border-radius: 30px;
+  position: relative;
+  overflow: hidden;
+  width: 900px; /* Fixed standard width */
+  max-width: 100%;
+  min-height: 600px; /* Fixed standard height */
+  z-index: 10;
+}
+
+/* Form Containers (Sign Up and Sign In) */
+.form-container {
+  position: absolute;
+  top: 0;
+  height: 100%;
+  transition:
+    transform 0.6s ease-in-out,
+    opacity 0.5s ease-in-out;
+}
+
+/* Sign In Container (Default: Right side for content, but logically 'left' in animation terms) */
+/* Actually, standard sliding pattern:
+   Sign In is usually on the left (z-index 2).
+   Sign Up is usually on the left but hidden (z-index 1).
+*/
+
+.sign-in-container {
+  left: 0;
+  width: 50%;
+  z-index: 2;
+  opacity: 1; /* Explicitly set default opacity */
+}
+
+.auth-card.right-panel-active .sign-in-container {
+  transform: translateX(100%);
+  opacity: 0; /* Hide when moved to right */
+}
+
+/* Sign Up Container */
+.sign-up-container {
+  left: 0;
+  width: 50%;
+  opacity: 0;
+  z-index: 1;
+}
+
+.auth-card.right-panel-active .sign-up-container {
+  transform: translateX(100%);
+  opacity: 1;
+  z-index: 5;
+  animation: show 0.6s;
+}
+
+@keyframes show {
+  0%,
+  49.99% {
+    opacity: 0;
+    z-index: 1;
+  }
+  50%,
+  100% {
+    opacity: 1;
+    z-index: 5;
+  }
+}
+
+/* Overlay Container (The Sliding Cover) */
+.overlay-container {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: 50%;
+  height: 100%;
+  overflow: hidden;
+  transition: transform 0.6s ease-in-out;
+  z-index: 100;
+  border-radius: 30px; /* Needs radius to match card corner when at edges */
+}
+
+.auth-card.right-panel-active .overlay-container {
+  transform: translateX(-100%);
+}
+
+/* Overlay (Inner Content Wrapper) */
+.overlay {
+  background: linear-gradient(
+    135deg,
+    var(--color-primary),
+    var(--color-primary-hover)
+  );
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: 0 0;
+  color: #ffffff;
+  position: relative;
+  left: -100%;
+  height: 100%;
+  width: 200%; /* Double width to slide content inside */
+  transform: translateX(0);
+  transition: transform 0.6s ease-in-out;
+}
+
+.auth-card.right-panel-active .overlay {
+  transform: translateX(50%); /* Slide inner content to match container move */
+}
+
+/* Overlay Panels (Left and Right content) */
+.overlay-panel {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  padding: 0 40px;
+  text-align: center;
+  top: 0;
+  height: 100%;
+  width: 50%;
+  transform: translateX(0);
+  transition: transform 0.6s ease-in-out;
+}
+
+/* Left Panel (Visible when Right Panel Active / Sign Up mode) */
+.overlay-left {
+  transform: translateX(-20%);
+}
+
+.auth-card.right-panel-active .overlay-left {
+  transform: translateX(0);
+}
+
+/* Right Panel (Visible Default / Sign In mode) */
+.overlay-right {
+  right: 0;
+  transform: translateX(0);
+}
+
+.auth-card.right-panel-active .overlay-right {
+  transform: translateX(20%);
+}
+
+/* Typography & Elements (Shared from Login/Register CSS) */
+h1 {
+  font-weight: 700;
+  margin: 0;
+  font-size: 2.5rem;
+  color: var(--color-text);
+}
+
+.overlay-panel h1 {
+  color: #ffffff;
+}
+
+p.welcome-text {
+  font-size: 14px;
+  font-weight: 300;
+  line-height: 20px;
+  letter-spacing: 0.5px;
+  margin: 20px 0 30px;
+  color: #ffffff;
+}
+
+.social-container {
+  margin: 20px 0;
+}
+
+.social-icon {
+  border: 1px solid var(--color-border);
+  border-radius: 50%;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0 5px;
+  width: 40px;
+  height: 40px;
+  color: var(--color-text);
+  text-decoration: none;
+  transition: all 0.3s ease;
+  background: rgba(255, 255, 255, 0.5);
+}
+
+.social-icon:hover {
+  background-color: #ffffff;
+  border-color: var(--color-primary);
+  color: var(--color-primary);
+  transform: translateY(-2px);
+}
+
+.divider-text {
+  font-size: 12px;
+  color: var(--color-text-muted);
+  margin-bottom: 15px;
+}
+
+/* Form Styles */
+form {
+  background-color: transparent; /* Card has the background */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  padding: 0 50px;
+  height: 100%;
+  text-align: center;
+}
+
+.form-input {
+  background-color: rgba(255, 255, 255, 0.5);
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  padding: 12px 15px;
+  margin: 8px 0;
+  width: 100%;
+  border-radius: 8px;
+  transition: all 0.2s;
+  color: var(--color-text);
+}
+
+.form-input:focus {
+  outline: none;
+  background-color: rgba(255, 255, 255, 0.9);
+  box-shadow: 0 0 0 2px var(--color-primary);
+}
+
+.form-input::placeholder {
+  color: var(--color-text-muted);
+}
+
+.form-select {
+  appearance: none;
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23403d39' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+  background-repeat: no-repeat;
+  background-position: right 1rem center;
+  background-size: 1em;
+  cursor: pointer;
+}
+
+/* Password Toggle */
+.password-input-container {
+  position: relative;
+  width: 100%;
+}
+
+.password-toggle-btn {
+  position: absolute;
+  right: 15px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--color-text-muted);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+}
+
+.password-toggle-btn:hover {
+  color: var(--color-primary);
+}
+
+/* Buttons */
+.btn-primary {
+  border-radius: 20px;
+  border: 1px solid var(--color-primary);
+  background: var(--color-primary);
+  color: #ffffff;
+  font-size: 12px;
+  font-weight: bold;
+  padding: 12px 45px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  transition: all 0.2s ease-in-out;
+  margin-top: 20px;
+  cursor: pointer;
+  box-shadow: 0 4px 15px rgba(235, 94, 40, 0.3);
+}
+
+.btn-primary:active {
+  transform: scale(0.95);
+}
+
+.btn-primary:hover {
+  background-color: var(--color-primary-hover);
+  box-shadow: 0 6px 20px rgba(235, 94, 40, 0.4);
+  transform: translateY(-1px);
+}
+
+.btn-ghost {
+  background-color: transparent;
+  border-color: #ffffff;
+  border: 1px solid #ffffff;
+  color: #ffffff;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: bold;
+  padding: 12px 45px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  transition: transform 80ms ease-in;
+  cursor: pointer;
+}
+
+.btn-ghost:active {
+  transform: scale(0.95);
+}
+
+.btn-ghost:hover {
+  background-color: #ffffff;
+  color: var(--color-primary);
+}
+
+.forgot-password {
+  color: var(--color-text);
+  font-size: 12px;
+  text-decoration: none;
+  margin: 15px 0;
+  border-bottom: 1px solid transparent;
+  transition: 0.2s;
+}
+
+.forgot-password:hover {
+  color: var(--color-primary);
+  border-bottom-color: var(--color-primary);
+}
+
+.error-message {
+  margin: 10px 0;
+  padding: 10px;
+  border-radius: 8px;
+  background-color: rgba(239, 68, 68, 0.1);
+  border: 1px solid rgba(239, 68, 68, 0.2);
+  color: var(--color-error);
+  font-size: 12px;
+  width: 100%;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .auth-card {
+    flex-direction: column;
+    width: 400px;
+    /* On mobile, sliding might be hard. 
+       Usually mobile sliding auth is replaced by a toggle or stacked view.
+       For now, we will just scale down or adjust.
+       A true sliding auth on mobile often breaks. 
+       We'll disable the slide and stack them, utilizing a simple toggle state 
+       to show/hide containers instead of x-transform.
+    */
+    height: auto;
+    min-height: 700px;
+  }
+
+  .form-container {
+    width: 100%;
+    position: relative;
+    height: auto;
+    transition: none;
+  }
+
+  .sign-in-container,
+  .sign-up-container {
+    left: auto;
+    width: 100%;
+    opacity: 1;
+    z-index: 1;
+    display: none; /* JS will toggle */
+  }
+
+  .auth-card.right-panel-active .sign-in-container {
+    transform: none;
+  }
+
+  .auth-card.right-panel-active .sign-up-container {
+    transform: none;
+  }
+
+  /* Manual overrides for mobile to just show active */
+  .mobile-show {
+    display: block !important;
+  }
+
+  .overlay-container {
+    display: none; /* Hide overlay on mobile, simpler */
+  }
+}
