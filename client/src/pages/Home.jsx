@@ -1,21 +1,21 @@
 const Home = () => {
     return (
         <div>
-            <h2 style={{ fontSize: 'var(--font-size-2xl)', marginBottom: 'var(--spacing-4)' }}>Welcome to the Glass UI</h2>
-            <p style={{ marginBottom: 'var(--spacing-6)' }}>This is the home page demonstrating the glassmorphism effect.</p>
+            <h2 style={{ fontSize: 'var(--font-size-2xl)', marginBottom: 'var(--spacing-4)', color: 'var(--color-primary)' }}>Warm Minimalist Light</h2>
+            <p style={{ marginBottom: 'var(--spacing-6)' }}>A fresh, airy palette of Cream, Beige, and Vibrant Orange.</p>
 
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: 'var(--spacing-6)' }}>
                 <div className="glass" style={{ padding: 'var(--spacing-6)' }}>
-                    <h3 style={{ fontSize: 'var(--font-size-lg)', fontWeight: 'var(--font-weight-bold)', marginBottom: 'var(--spacing-2)' }}>Card 1</h3>
-                    <p>This card uses the glass utility class. Notice the blur and transparency.</p>
+                    <h3 style={{ fontSize: 'var(--font-size-lg)', fontWeight: 'var(--font-weight-bold)', marginBottom: 'var(--spacing-2)', color: 'var(--color-primary)' }}>Cream Foundation</h3>
+                    <p>Soft, warm backgrounds that are easy on the eyes.</p>
                 </div>
                 <div className="glass" style={{ padding: 'var(--spacing-6)' }}>
-                    <h3 style={{ fontSize: 'var(--font-size-lg)', fontWeight: 'var(--font-weight-bold)', marginBottom: 'var(--spacing-2)' }}>Card 2</h3>
-                    <p>Another glass card to show the layout.</p>
+                    <h3 style={{ fontSize: 'var(--font-size-lg)', fontWeight: 'var(--font-weight-bold)', marginBottom: 'var(--spacing-2)' }}>Clear Typography</h3>
+                    <p>Deep Charcoal text ensures excellent readability.</p>
                 </div>
                 <div className="glass" style={{ padding: 'var(--spacing-6)' }}>
-                    <h3 style={{ fontSize: 'var(--font-size-lg)', fontWeight: 'var(--font-weight-bold)', marginBottom: 'var(--spacing-2)' }}>Card 3</h3>
-                    <p>Glassmorphism works best with a colorful background!</p>
+                    <h3 style={{ fontSize: 'var(--font-size-lg)', fontWeight: 'var(--font-weight-bold)', marginBottom: 'var(--spacing-2)' }}>Orange Energy</h3>
+                    <p>Vibrant accents providing life to the minimalist design.</p>
                 </div>
             </div>
         </div>

@@ -1,8 +1,11 @@
 import { Outlet } from 'react-router-dom';
 
+import InteractiveBackground from '../components/InteractiveBackground';
+
 const MainLayout = () => {
     return (
         <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh', padding: 'var(--spacing-4)' }}>
+            <InteractiveBackground />
             <header className="glass" style={{
                 padding: 'var(--spacing-4)',
                 display: 'flex',
@@ -10,7 +13,7 @@ const MainLayout = () => {
                 alignItems: 'center',
                 marginBottom: 'var(--spacing-6)'
             }}>
-                <h1 style={{ fontSize: 'var(--font-size-xl)', fontWeight: 'var(--font-weight-bold)', color: 'var(--color-primary-hover)' }}>App Name</h1>
+                <h1 style={{ fontSize: 'var(--font-size-xl)', fontWeight: 'var(--font-weight-bold)', color: 'var(--color-primary)' }}>App Name</h1>
                 <nav>
                     {/* Navigation links will go here */}
                 </nav>
