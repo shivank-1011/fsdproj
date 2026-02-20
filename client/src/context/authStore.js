@@ -17,6 +17,8 @@ export const useAuthStore = create((set) => ({
         name,
         role,
       });
+      localStorage.setItem("accessToken", response.data.accessToken);
+      localStorage.setItem("refreshToken", response.data.refreshToken);
       set({
         user: response.data.user,
         isAuthenticated: true,
@@ -26,7 +28,10 @@ export const useAuthStore = create((set) => ({
     } catch (error) {
       set({
         isLoading: false,
-        error: error.response?.data?.message || "Error registering",
+        error:
+          error.response?.data?.message ||
+          error.response?.data?.error ||
+          "Error registering",
       });
       throw error;
     }
@@ -39,6 +44,8 @@ export const useAuthStore = create((set) => ({
         email,
         password,
       });
+      localStorage.setItem("accessToken", response.data.accessToken);
+      localStorage.setItem("refreshToken", response.data.refreshToken);
       set({
         user: response.data.user,
         isAuthenticated: true,
@@ -48,7 +55,37 @@ export const useAuthStore = create((set) => ({
     } catch (error) {
       set({
         isLoading: false,
-        error: error.response?.data?.message || "Error logging in",
+        error:
+          error.response?.data?.message ||
+          error.response?.data?.error ||
+          "Error logging in",
+      });
+      throw error;
+    }
+  },
+
+  googleAuth: async (idToken, role) => {
+    set({ isLoading: true, error: null });
+    try {
+      const response = await axios.post("/auth/google", {
+        idToken,
+        role,
+      });
+      localStorage.setItem("accessToken", response.data.accessToken);
+      localStorage.setItem("refreshToken", response.data.refreshToken);
+      set({
+        user: response.data.user,
+        isAuthenticated: true,
+        isLoading: false,
+      });
+      return response.data;
+    } catch (error) {
+      set({
+        isLoading: false,
+        error:
+          error.response?.data?.message ||
+          error.response?.data?.error ||
+          "Error during Google authentication",
       });
       throw error;
     }
@@ -57,24 +94,37 @@ export const useAuthStore = create((set) => ({
   logout: async () => {
     set({ isLoading: true, error: null });
     try {
-      await axios.post("/auth/logout");
+      const refreshToken = localStorage.getItem("refreshToken");
+      await axios.post("/auth/logout", { refreshToken });
+      localStorage.removeItem("accessToken");
+      localStorage.removeItem("refreshToken");
       set({
         user: null,
         isAuthenticated: false,
         isLoading: false,
       });
     } catch (error) {
+      localStorage.removeItem("accessToken");
+      localStorage.removeItem("refreshToken");
       set({
+        user: null,
+        isAuthenticated: false,
         isLoading: false,
-        error: error.response?.data?.message || "Error logging out",
+        error:
+          error.response?.data?.message ||
+          error.response?.data?.error ||
+          "Error logging out",
       });
-      throw error;
     }
   },
 
   checkAuth: async () => {
     set({ checkAuthLoading: true, error: null });
     try {
+      const token = localStorage.getItem("accessToken");
+      if (!token) {
+        throw new Error("No token found");
+      }
       const response = await axios.get("/auth/me");
       set({
         user: response.data.user,

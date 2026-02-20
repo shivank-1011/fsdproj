@@ -1,5 +1,7 @@
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
+const crypto = require("crypto");
+const { OAuth2Client } = require("google-auth-library");
 const { PrismaClient } = require("@prisma/client");
 const {
   generateAccessToken,
@@ -7,6 +9,7 @@ const {
 } = require("../utils/tokens");
 
 const prisma = new PrismaClient();
+const googleClient = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 
 const register = async (req, res) => {
   try {
@@ -141,4 +144,59 @@ const me = async (req, res) => {
   }
 };
 
-module.exports = { register, login, refreshToken, logout, me };
+const googleLogin = async (req, res) => {
+  try {
+    const { idToken, role } = req.body;
+
+    // Verify the Google ID token
+    const ticket = await googleClient.verifyIdToken({
+      idToken,
+      audience: process.env.GOOGLE_CLIENT_ID,
+    });
+    const payload = ticket.getPayload();
+    const { email, name } = payload;
+
+    // Check if user exists
+    let user = await prisma.user.findUnique({ where: { email } });
+
+    if (!user) {
+      // Create user if not exists with a random password
+      const randomPassword = crypto.randomBytes(16).toString("hex");
+      const hashedPassword = await bcrypt.hash(randomPassword, 10);
+      user = await prisma.user.create({
+        data: {
+          email,
+          name,
+          password: hashedPassword,
+          role: role || "USER",
+        },
+      });
+    }
+
+    const accessToken = generateAccessToken(user);
+    const refreshToken = generateRefreshToken(user);
+
+    await prisma.user.update({
+      where: { id: user.id },
+      data: { refreshToken },
+    });
+
+    res.status(200).json({
+      user: {
+        id: user.id,
+        email: user.email,
+        name: user.name,
+        role: user.role,
+      },
+      accessToken,
+      refreshToken,
+    });
+  } catch (error) {
+    console.error("Google Auth Error:", error);
+    res
+      .status(500)
+      .json({ error: error.message || "Google authentication failed" });
+  }
+};
+
+module.exports = { register, login, googleLogin, refreshToken, logout, me };

@@ -10,9 +10,9 @@ const limiter = rateLimit({
 
 const authLimiter = rateLimit({
   windowMs: 60 * 60 * 1000, // 1 hour
-  max: 10, // Limit each IP to 100 create account requests per `window` (here, per hour)
+  max: 100, // Increased from 10 to 1000, as this covers /me and /refresh-token too
   message:
-    "Too many accounts created from this IP, please try again after an hour",
+    "Too many auth requests from this IP, please try again after an hour",
 });
 
 module.exports = { limiter, authLimiter };

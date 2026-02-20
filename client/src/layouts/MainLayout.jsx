@@ -1,8 +1,21 @@
-import { Outlet } from 'react-router-dom';
+import { Outlet, Link, useNavigate } from 'react-router-dom';
+import { useState } from 'react';
+import { Search, ShoppingCart, User } from 'lucide-react';
 
 import InteractiveBackground from '../components/InteractiveBackground';
 
 const MainLayout = () => {
+    const navigate = useNavigate();
+    const [searchQuery, setSearchQuery] = useState('');
+
+    const handleSearch = (e) => {
+        e.preventDefault();
+        if (searchQuery.trim()) {
+            navigate(`/products?search=${encodeURIComponent(searchQuery)}`);
+            setSearchQuery(''); // Optional: clear search after submitting
+        }
+    };
+
     return (
         <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh', padding: 'var(--spacing-4)' }}>
             <InteractiveBackground />
@@ -11,11 +24,63 @@ const MainLayout = () => {
                 display: 'flex',
                 justifyContent: 'space-between',
                 alignItems: 'center',
-                marginBottom: 'var(--spacing-6)'
+                marginBottom: 'var(--spacing-6)',
+                gap: 'var(--spacing-6)'
             }}>
-                <h1 style={{ fontSize: 'var(--font-size-xl)', fontWeight: 'var(--font-weight-bold)', color: 'var(--color-primary)' }}>App Name</h1>
-                <nav>
-                    {/* Navigation links will go here */}
+                {/* Logo / App Name */}
+                <Link to="/" style={{ textDecoration: 'none' }}>
+                    <h1 style={{ fontSize: 'var(--font-size-xl)', fontWeight: 'var(--font-weight-bold)', color: 'var(--color-primary)', margin: 0 }}>
+                        App Name
+                    </h1>
+                </Link>
+
+                {/* Global Search Bar */}
+                <form
+                    onSubmit={handleSearch}
+                    style={{
+                        flex: 1,
+                        maxWidth: '500px',
+                        position: 'relative',
+                        display: 'flex',
+                        alignItems: 'center'
+                    }}
+                >
+                    <Search
+                        size={18}
+                        style={{
+                            position: 'absolute',
+                            left: '12px',
+                            color: 'var(--color-text-muted)'
+                        }}
+                    />
+                    <input
+                        type="text"
+                        placeholder="Search for products..."
+                        value={searchQuery}
+                        onChange={(e) => setSearchQuery(e.target.value)}
+                        style={{
+                            width: '100%',
+                            padding: '10px 16px 10px 40px',
+                            border: 'none',
+                            borderRadius: '24px',
+                            backgroundColor: 'rgba(255, 255, 255, 0.5)',
+                            color: 'var(--color-text)',
+                            fontSize: 'var(--font-size-md)',
+                            boxShadow: 'inset 2px 2px 5px rgba(0,0,0,0.05), inset -2px -2px 5px rgba(255,255,255,0.8)',
+                            outline: 'none',
+                        }}
+                    />
+                </form>
+
+                {/* Navigation */}
+                <nav style={{ display: 'flex', gap: 'var(--spacing-6)', alignItems: 'center' }}>
+                    <Link to="/products" style={{ textDecoration: 'none', color: 'var(--color-text)', fontWeight: 'var(--font-weight-medium)' }}>
+                        Products
+                    </Link>
+                    <Link to="/cart" style={{ textDecoration: 'none', color: 'var(--color-text)' }}>
+                        <ShoppingCart size={24} />
+                    </Link>
+                    {/* Add User profile link if needed here */}
                 </nav>
             </header>
 

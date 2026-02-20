@@ -7,6 +7,8 @@ import MainLayout from "./layouts/MainLayout";
 import Home from "./pages/Home";
 import AuthPage from "./pages/AuthPage";
 import ProtectedRoutes from "./components/ProtectedRoutes";
+import Products from "./pages/Products";
+import ProductDetails from "./pages/ProductDetails";
 
 function App() {
   const { checkAuth, checkAuthLoading } = useAuthStore();
@@ -33,6 +35,8 @@ function App() {
       <Route element={<ProtectedRoutes />}>
         <Route path="/" element={<MainLayout />}>
           <Route index element={<Home />} />
+          <Route path="products" element={<Products />} />
+          <Route path="products/:id" element={<ProductDetails />} />
         </Route>
       </Route>
 

@@ -10,12 +10,10 @@ const api = axios.create({
 
 api.interceptors.request.use(
   (config) => {
-    // You can add logic here if you need to attach headers dynamically
-    // For example, if you were storing tokens in localStorage (not recommended for HttpOnly cookies)
-    // const token = localStorage.getItem("accessToken");
-    // if (token) {
-    //   config.headers.Authorization = `Bearer ${token}`;
-    // }
+    const token = localStorage.getItem("accessToken");
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
     return config;
   },
   (error) => {
@@ -30,20 +28,28 @@ api.interceptors.response.use(
   async (error) => {
     const originalRequest = error.config;
 
-    // Check if error is 401 and we haven't tried to refresh yet
     if (error.response?.status === 401 && !originalRequest._retry) {
       originalRequest._retry = true;
 
       try {
-        // Attempt to refresh token
-        // We assume the refresh token is stored in an HttpOnly cookie
-        await api.post("/auth/refresh-token");
+        const refreshToken = localStorage.getItem("refreshToken");
+        if (!refreshToken) throw new Error("No refresh token");
 
-        // Retry the original request
+        const response = await axios.post(
+          "http://localhost:5001/api/auth/refresh-token",
+          { refreshToken },
+          { headers: { "Content-Type": "application/json" } },
+        );
+
+        localStorage.setItem("accessToken", response.data.accessToken);
+
+        // Update the failed request with the new token
+        originalRequest.headers.Authorization = `Bearer ${response.data.accessToken}`;
         return api(originalRequest);
       } catch (refreshError) {
-        // If refresh fails, user needs to login again
-        // We can redirect to login or let the app handle the 401
+        localStorage.removeItem("accessToken");
+        localStorage.removeItem("refreshToken");
+        // We do not reject here immediately if we want app logic to just fail over to login natively, but standard is to reject
         return Promise.reject(refreshError);
       }
     }

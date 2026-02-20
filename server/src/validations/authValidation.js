@@ -16,7 +16,15 @@ const loginSchema = z.object({
   }),
 });
 
+const googleAuthSchema = z.object({
+  body: z.object({
+    idToken: z.string().min(1, "Google ID token is required"),
+    role: z.enum(["USER", "SELLER", "ADMIN"]).optional(),
+  }),
+});
+
 module.exports = {
   registerSchema,
   loginSchema,
+  googleAuthSchema,
 };
