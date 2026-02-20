@@ -9,6 +9,7 @@ import AuthPage from "./pages/AuthPage";
 import ProtectedRoutes from "./components/ProtectedRoutes";
 import Products from "./pages/Products";
 import ProductDetails from "./pages/ProductDetails";
+import Cart from "./pages/Cart";
 
 function App() {
   const { checkAuth, checkAuthLoading } = useAuthStore();
@@ -37,6 +38,7 @@ function App() {
           <Route index element={<Home />} />
           <Route path="products" element={<Products />} />
           <Route path="products/:id" element={<ProductDetails />} />
+          <Route path="cart" element={<Cart />} />
         </Route>
       </Route>
 

@@ -83,9 +83,9 @@ const ProductCard = ({ product }) => {
                         <span style={{
                             fontSize: 'var(--font-size-xl)',
                             fontWeight: 'var(--font-weight-bold)',
-                            color: 'var(--color-accent)'
+                            color: 'var(--color-text)'
                         }}>
-                            ${Number(product.price).toFixed(2)}
+                            ₹{Number(product.price).toFixed(2)}
                         </span>
 
                         {product.store && (

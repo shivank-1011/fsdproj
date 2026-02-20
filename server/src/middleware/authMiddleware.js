@@ -9,7 +9,8 @@ const authenticateToken = (req, res, next) => {
   if (!token) return res.status(401).json({ error: "Access token required" });
 
   jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, user) => {
-    if (err) return res.status(403).json({ error: "Invalid or expired token" });
+    // Return 401 so the frontend interceptor catches it and triggers token refresh
+    if (err) return res.status(401).json({ error: "Invalid or expired token" });
     req.user = user;
     next();
   });
@@ -29,7 +30,7 @@ const authorizeRoles = (...allowedRoles) => {
 const checkStoreOwnership = async (req, res, next) => {
   try {
     const userId = req.user.userId;
-    const storeId = req.params.id; 
+    const storeId = req.params.id;
 
     // Admins can bypass ownership check
     if (req.user.role === "ADMIN") return next();

@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
-import axios from 'axios';
 import { Loader2 } from 'lucide-react';
+import api from '../lib/axios';
 
 import ProductCard from '../components/ProductCard';
 import FilterSidebar from '../components/FilterSidebar';
@@ -13,7 +13,7 @@ const fetchProducts = async (params) => {
     const cleanParams = Object.fromEntries(
         Object.entries(params).filter(([_, v]) => v != null && v !== '')
     );
-    const { data } = await axios.get('http://localhost:5000/api/products', { params: cleanParams });
+    const { data } = await api.get('/products', { params: cleanParams });
     return data;
 };
 

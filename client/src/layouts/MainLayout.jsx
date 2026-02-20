@@ -1,12 +1,21 @@
 import { Outlet, Link, useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 import { Search, ShoppingCart, User } from 'lucide-react';
+import { useEffect } from 'react';
+import { useCartStore } from '../context/cartStore';
 
 import InteractiveBackground from '../components/InteractiveBackground';
 
 const MainLayout = () => {
     const navigate = useNavigate();
     const [searchQuery, setSearchQuery] = useState('');
+    const { cart, fetchCart } = useCartStore();
+
+    useEffect(() => {
+        fetchCart();
+    }, [fetchCart]);
+
+    const cartItemCount = cart?.items?.reduce((total, item) => total + item.quantity, 0) || 0;
 
     const handleSearch = (e) => {
         e.preventDefault();
@@ -30,7 +39,7 @@ const MainLayout = () => {
                 {/* Logo / App Name */}
                 <Link to="/" style={{ textDecoration: 'none' }}>
                     <h1 style={{ fontSize: 'var(--font-size-xl)', fontWeight: 'var(--font-weight-bold)', color: 'var(--color-primary)', margin: 0 }}>
-                        App Name
+                        UnityMart
                     </h1>
                 </Link>
 
@@ -77,8 +86,28 @@ const MainLayout = () => {
                     <Link to="/products" style={{ textDecoration: 'none', color: 'var(--color-text)', fontWeight: 'var(--font-weight-medium)' }}>
                         Products
                     </Link>
-                    <Link to="/cart" style={{ textDecoration: 'none', color: 'var(--color-text)' }}>
+                    <Link to="/cart" style={{ textDecoration: 'none', color: 'var(--color-text)', position: 'relative' }}>
                         <ShoppingCart size={24} />
+                        {cartItemCount > 0 && (
+                            <span style={{
+                                position: 'absolute',
+                                top: '-8px',
+                                right: '-8px',
+                                backgroundColor: 'var(--color-primary)',
+                                color: '#ffffff',
+                                fontSize: '0.75rem',
+                                fontWeight: 'bold',
+                                borderRadius: 'var(--radius-full)',
+                                width: '20px',
+                                height: '20px',
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                boxShadow: '0 2px 4px rgba(0,0,0,0.2)'
+                            }}>
+                                {cartItemCount > 99 ? '99+' : cartItemCount}
+                            </span>
+                        )}
                     </Link>
                     {/* Add User profile link if needed here */}
                 </nav>
