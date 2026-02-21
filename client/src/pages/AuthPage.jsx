@@ -78,7 +78,7 @@ export default function AuthPage() {
             <div className={`auth-card ${isSignUp ? "right-panel-active" : ""}`}>
 
                 {/* SIGN UP FORM CONTAINER (Register) */}
-                <div className="form-container sign-up-container">
+                <div className={`form-container sign-up-container ${isSignUp ? "mobile-show" : ""}`}>
                     <form onSubmit={handleRegisterSubmit}>
                         <h1 style={{ fontSize: '2rem', marginBottom: '15px' }}>Create Account</h1>
 
@@ -168,11 +168,21 @@ export default function AuthPage() {
                         <button type="submit" className="btn-primary" disabled={isLoading} style={{ marginTop: '15px' }}>
                             {isLoading ? <Loader2 className="animate-spin" size={20} /> : "SIGN UP"}
                         </button>
+
+                        {/* Mobile Toggle Button */}
+                        <button
+                            type="button"
+                            className="forgot-password"
+                            style={{ marginTop: '15px', background: 'none', border: 'none', cursor: 'pointer' }}
+                            onClick={() => handleSwitch("signin")}
+                        >
+                            Already have an account? Sign In
+                        </button>
                     </form>
                 </div>
 
                 {/* SIGN IN FORM CONTAINER (Login) */}
-                <div className="form-container sign-in-container">
+                <div className={`form-container sign-in-container ${!isSignUp ? "mobile-show" : ""}`}>
                     <form onSubmit={handleLoginSubmit}>
                         <h1>Sign In</h1>
 
@@ -225,10 +235,20 @@ export default function AuthPage() {
                             </button>
                         </div>
 
-                        <Link to="/forgot-password" class="forgot-password">Forgot your password?</Link>
+                        <Link to="/forgot-password" className="forgot-password">Forgot your password?</Link>
 
                         <button type="submit" className="btn-primary" disabled={isLoading}>
                             {isLoading ? <Loader2 className="animate-spin" size={20} /> : "SIGN IN"}
+                        </button>
+
+                        {/* Mobile Toggle Button */}
+                        <button
+                            type="button"
+                            className="forgot-password"
+                            style={{ marginTop: '15px', background: 'none', border: 'none', cursor: 'pointer' }}
+                            onClick={() => handleSwitch("signup")}
+                        >
+                            Don't have an account? Sign Up
                         </button>
                     </form>
                 </div>

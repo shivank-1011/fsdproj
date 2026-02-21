@@ -86,6 +86,11 @@ const MainLayout = () => {
                     <Link to="/products" style={{ textDecoration: 'none', color: 'var(--color-text)', fontWeight: 'var(--font-weight-medium)' }}>
                         Products
                     </Link>
+                    {useAuthStore.getState().user?.role === 'SELLER' && (
+                        <Link to="/seller" style={{ textDecoration: 'none', color: 'var(--color-primary)', fontWeight: 'var(--font-weight-bold)' }}>
+                            Dashboard
+                        </Link>
+                    )}
                     <Link to="/cart" style={{ textDecoration: 'none', color: 'var(--color-text)', position: 'relative' }}>
                         <ShoppingCart size={24} />
                         {cartItemCount > 0 && (

@@ -11,8 +11,16 @@ import Products from "./pages/Products";
 import ProductDetails from "./pages/ProductDetails";
 import Cart from "./pages/Cart";
 
+// Seller Layout and Pages
+import SellerRoutes from "./components/SellerRoutes";
+import SellerLayout from "./layouts/SellerLayout";
+import Dashboard from "./pages/seller/Dashboard";
+import StoreCreation from "./pages/seller/StoreCreation";
+import ProductManagement from "./pages/seller/ProductManagement";
+
 function App() {
-  const { checkAuth, checkAuthLoading } = useAuthStore();
+  const checkAuth = useAuthStore((state) => state.checkAuth);
+  const checkAuthLoading = useAuthStore((state) => state.checkAuthLoading);
 
   useEffect(() => {
     checkAuth();
@@ -20,8 +28,8 @@ function App() {
 
   if (checkAuthLoading) {
     return (
-      <div className="flex h-screen w-full items-center justify-center bg-[#252422] text-[#eb5e28]">
-        <Loader2 className="h-10 w-10 animate-spin" />
+      <div style={{ display: 'flex', height: '100vh', width: '100%', alignItems: 'center', justifyContent: 'center', backgroundColor: 'var(--color-background)' }}>
+        <Loader2 className="animate-spin" style={{ color: 'var(--color-primary)' }} size={40} />
       </div>
     );
   }
@@ -31,6 +39,15 @@ function App() {
       {/* Public Routes - Both point to AuthPage which handles the view state */}
       <Route path="/login" element={<AuthPage />} />
       <Route path="/register" element={<AuthPage />} />
+
+      {/* Seller Routes */}
+      <Route element={<SellerRoutes />}>
+        <Route path="/seller" element={<SellerLayout />}>
+          <Route index element={<Dashboard />} />
+          <Route path="store-setup" element={<StoreCreation />} />
+          <Route path="products" element={<ProductManagement />} />
+        </Route>
+      </Route>
 
       {/* Protected Routes */}
       <Route element={<ProtectedRoutes />}>
