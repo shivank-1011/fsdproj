@@ -11,7 +11,7 @@ import FilterSidebar from '../components/FilterSidebar';
 const fetchProducts = async (params) => {
     // Clean up empty params
     const cleanParams = Object.fromEntries(
-        Object.entries(params).filter(([_, v]) => v != null && v !== '')
+        Object.entries(params).filter(([, v]) => v != null && v !== '')
     );
     const { data } = await api.get('/products', { params: cleanParams });
     return data;

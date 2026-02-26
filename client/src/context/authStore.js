@@ -132,6 +132,7 @@ export const useAuthStore = create((set) => ({
         checkAuthLoading: false,
       });
     } catch (error) {
+      console.error(error);
       set({
         user: null,
         isAuthenticated: false,

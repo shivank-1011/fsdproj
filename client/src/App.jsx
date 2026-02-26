@@ -11,7 +11,6 @@ import Products from "./pages/Products";
 import ProductDetails from "./pages/ProductDetails";
 import Cart from "./pages/Cart";
 
-// Seller Layout and Pages
 import SellerRoutes from "./components/SellerRoutes";
 import SellerLayout from "./layouts/SellerLayout";
 import Dashboard from "./pages/seller/Dashboard";
@@ -36,11 +35,10 @@ function App() {
 
   return (
     <Routes>
-      {/* Public Routes - Both point to AuthPage which handles the view state */}
       <Route path="/login" element={<AuthPage />} />
       <Route path="/register" element={<AuthPage />} />
+      <Route path="/forgot-password" element={<AuthPage />} />
 
-      {/* Seller Routes */}
       <Route element={<SellerRoutes />}>
         <Route path="/seller" element={<SellerLayout />}>
           <Route index element={<Dashboard />} />
@@ -49,7 +47,6 @@ function App() {
         </Route>
       </Route>
 
-      {/* Protected Routes */}
       <Route element={<ProtectedRoutes />}>
         <Route path="/" element={<MainLayout />}>
           <Route index element={<Home />} />
@@ -59,7 +56,6 @@ function App() {
         </Route>
       </Route>
 
-      {/* Catch all */}
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
   );

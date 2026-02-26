@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { Search, ShoppingCart, User } from 'lucide-react';
 import { useEffect } from 'react';
 import { useCartStore } from '../context/cartStore';
+import { useAuthStore } from '../context/authStore';
 
 import InteractiveBackground from '../components/InteractiveBackground';
 

@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useLocation, useNavigate, Link } from "react-router-dom";
 import { useAuthStore } from "../context/authStore";
 import { Eye, EyeOff, Loader2 } from "lucide-react";
@@ -7,9 +7,9 @@ import InteractiveBackground from "../components/InteractiveBackground";
 import "./AuthPage.css";
 
 export default function AuthPage() {
-    const [isSignUp, setIsSignUp] = useState(false);
     const location = useLocation();
     const navigate = useNavigate();
+    const isSignUp = location.pathname === "/register";
 
     // Store state
     const { login, register: registerUser, googleAuth, isLoading, error, clearError } = useAuthStore();
@@ -21,23 +21,12 @@ export default function AuthPage() {
     const [role, setRole] = useState("USER"); // Default to user
     const [showPassword, setShowPassword] = useState(false);
 
-    // Determine initial mode based on URL
-    useEffect(() => {
-        if (location.pathname === "/register") {
-            setIsSignUp(true);
-        } else {
-            setIsSignUp(false);
-        }
-        // Clear errors when switching modes/routes
+    const handleSwitch = (mode) => {
+        // Clear errors and reset form when switching modes
         if (clearError) clearError();
-        // Reset form fields
         setEmail("");
         setPassword("");
         setName("");
-    }, [location.pathname, clearError]);
-
-    const handleSwitch = (mode) => {
-        setIsSignUp(mode === "signup");
         // Update URL to match state without reloading
         navigate(mode === "signup" ? "/register" : "/login", { replace: true });
     };
@@ -48,7 +37,7 @@ export default function AuthPage() {
             await login(email, password);
             navigate("/"); // Or previous location
         } catch (err) {
-            // Error handled by store
+            console.error(err);
         }
     };
 
@@ -58,7 +47,7 @@ export default function AuthPage() {
             await registerUser(email, password, name, role);
             navigate("/");
         } catch (err) {
-            // Error handled by store
+            console.error(err);
         }
     };
 
@@ -67,7 +56,7 @@ export default function AuthPage() {
             await googleAuth(credentialResponse.credential, role);
             navigate("/");
         } catch (err) {
-            // Error handled by store
+            console.error(err);
         }
     };
 
