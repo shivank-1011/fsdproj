@@ -1,6 +1,7 @@
 import { useEffect } from 'react';
 import { useStoreStore } from '../../context/storeStore';
 import { Loader2 } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 export default function Dashboard() {
     const { fetchMyStore, store, isLoading } = useStoreStore();
@@ -28,10 +29,18 @@ export default function Dashboard() {
                     <p style={{ marginTop: 'var(--spacing-2)', color: 'var(--color-text-muted)' }}>
                         Status: {store.isVerified ? 'Verified' : 'Pending Verification'}
                     </p>
+                    <div style={{ marginTop: 'var(--spacing-6)', display: 'flex', gap: 'var(--spacing-4)' }}>
+                        <Link to="/seller/products" className="button-primary" style={{ textDecoration: 'none', display: 'inline-block', padding: '10px 20px', borderRadius: 'var(--radius-md)' }}>
+                            Manage Products
+                        </Link>
+                    </div>
                 </div>
             ) : (
                 <div>
-                    <p style={{ fontSize: 'var(--font-size-lg)' }}>You have not set up a store yet. Please create one to start selling!</p>
+                    <p style={{ fontSize: 'var(--font-size-lg)', marginBottom: 'var(--spacing-4)' }}>You have not set up a store yet. Please create one to start selling!</p>
+                    <Link to="/seller/store-setup" className="button-primary" style={{ textDecoration: 'none', display: 'inline-block', padding: '10px 20px', borderRadius: 'var(--radius-md)' }}>
+                        Create Store
+                    </Link>
                 </div>
             )}
         </div>

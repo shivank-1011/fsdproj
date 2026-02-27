@@ -11,6 +11,7 @@ const MainLayout = () => {
     const navigate = useNavigate();
     const [searchQuery, setSearchQuery] = useState('');
     const { cart, fetchCart } = useCartStore();
+    const { user } = useAuthStore();
 
     useEffect(() => {
         fetchCart();
@@ -87,7 +88,7 @@ const MainLayout = () => {
                     <Link to="/products" style={{ textDecoration: 'none', color: 'var(--color-text)', fontWeight: 'var(--font-weight-medium)' }}>
                         Products
                     </Link>
-                    {useAuthStore.getState().user?.role === 'SELLER' && (
+                    {user?.role === 'SELLER' && (
                         <Link to="/seller" style={{ textDecoration: 'none', color: 'var(--color-primary)', fontWeight: 'var(--font-weight-bold)' }}>
                             Dashboard
                         </Link>

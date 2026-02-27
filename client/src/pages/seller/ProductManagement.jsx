@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useStoreStore } from '../../context/storeStore';
 import { useProductStore } from '../../context/productStore';
+import { Link } from 'react-router-dom';
 import { Plus, Edit2, Trash2, Loader2, Image as ImageIcon } from 'lucide-react';
 
 export default function ProductManagement() {
@@ -94,7 +95,10 @@ export default function ProductManagement() {
     if (!store) {
         return (
             <div className="glass" style={{ padding: 'var(--spacing-6)', borderRadius: 'var(--radius-xl)' }}>
-                <p style={{ fontSize: 'var(--font-size-lg)' }}>Please create a store first to manage products.</p>
+                <p style={{ fontSize: 'var(--font-size-lg)', marginBottom: 'var(--spacing-4)' }}>Please create a store first to manage products.</p>
+                <Link to="/seller/store-setup" className="button-primary" style={{ textDecoration: 'none', display: 'inline-block', padding: '10px 20px', borderRadius: 'var(--radius-md)' }}>
+                    Create Store
+                </Link>
             </div>
         );
     }

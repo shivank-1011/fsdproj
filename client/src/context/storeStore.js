@@ -9,7 +9,7 @@ export const useStoreStore = create((set) => ({
   fetchMyStore: async () => {
     set({ isLoading: true, error: null });
     try {
-      const response = await axios.get("/store/me");
+      const response = await axios.get("/stores/me");
       set({ store: response.data.store, isLoading: false });
       return response.data.store;
     } catch (error) {
@@ -29,7 +29,7 @@ export const useStoreStore = create((set) => ({
   createStore: async (storeData) => {
     set({ isLoading: true, error: null });
     try {
-      const response = await axios.post("/store", storeData);
+      const response = await axios.post("/stores", storeData);
       set({ store: response.data.store, isLoading: false });
       return response.data.store;
     } catch (error) {
@@ -44,7 +44,7 @@ export const useStoreStore = create((set) => ({
   updateStore: async (id, storeData) => {
     set({ isLoading: true, error: null });
     try {
-      const response = await axios.put(`/store/${id}`, storeData);
+      const response = await axios.put(`/stores/${id}`, storeData);
       set((state) => ({
         store: { ...state.store, ...response.data.store },
         isLoading: false,
