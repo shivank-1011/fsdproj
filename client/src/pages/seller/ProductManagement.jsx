@@ -1,10 +1,12 @@
 import { useState, useEffect } from 'react';
 import { useStoreStore } from '../../context/storeStore';
 import { useProductStore } from '../../context/productStore';
-import { Link } from 'react-router-dom';
-import { Plus, Edit2, Trash2, Loader2, Image as ImageIcon } from 'lucide-react';
+import { Link, useNavigate } from 'react-router-dom';
+import { Plus, Edit2, Trash2, Image as ImageIcon, Package } from 'lucide-react';
+import { LoadingState, EmptyState } from '../../components/UIState';
 
 export default function ProductManagement() {
+    const navigate = useNavigate();
     const { store, fetchMyStore, isLoading: isStoreLoading } = useStoreStore();
     const { createProduct, updateProduct, deleteProduct, isLoading: isProductLoading, error } = useProductStore();
 
@@ -89,17 +91,18 @@ export default function ProductManagement() {
     };
 
     if (isStoreLoading && !store) {
-        return <div style={{ display: 'flex', justifyContent: 'center', padding: 'var(--spacing-8)' }}><Loader2 className="animate-spin" style={{ color: 'var(--color-primary)' }} size={32} /></div>;
+        return <LoadingState message="Connecting to your store..." fullHeight />;
     }
 
     if (!store) {
         return (
-            <div className="glass" style={{ padding: 'var(--spacing-6)', borderRadius: 'var(--radius-xl)' }}>
-                <p style={{ fontSize: 'var(--font-size-lg)', marginBottom: 'var(--spacing-4)' }}>Please create a store first to manage products.</p>
-                <Link to="/seller/store-setup" className="button-primary" style={{ textDecoration: 'none', display: 'inline-block', padding: '10px 20px', borderRadius: 'var(--radius-md)' }}>
-                    Create Store
-                </Link>
-            </div>
+            <EmptyState
+                title="Store Required"
+                message="Please create a store first to manage products."
+                actionLabel="Create Store"
+                onAction={() => navigate('/seller/store-setup')}
+                fullHeight
+            />
         );
     }
 
@@ -165,9 +168,13 @@ export default function ProductManagement() {
             ) : (
                 <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--spacing-4)' }}>
                     {(!store.products || store.products.length === 0) ? (
-                        <p style={{ color: 'var(--color-text-muted)', textAlign: 'center', padding: 'var(--spacing-8)', fontStyle: 'italic' }}>
-                            No products found. Add some to get started!
-                        </p>
+                        <EmptyState
+                            title="No Products Yet"
+                            message="You haven't added any products to your store. Add some to get started!"
+                            icon={Package}
+                            actionLabel="Add Product"
+                            onAction={() => { resetForm(); setView('create'); }}
+                        />
                     ) : (
                         <div style={{ overflowX: 'auto' }}>
                             <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left' }}>

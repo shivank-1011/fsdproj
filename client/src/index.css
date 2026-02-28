@@ -449,3 +449,63 @@ h6 {
   pointer-events: none;
   /* Optional: Animate shine on hover if desired, or keep static subtle shine */
 }
+
+/* Responsive Layout Utilities */
+.responsive-flex-layout {
+  display: flex;
+  gap: var(--spacing-8);
+  flex-direction: row;
+  align-items: flex-start;
+}
+
+.responsive-flex-main {
+  flex: 1;
+  min-width: 0;
+}
+
+.responsive-flex-sidebar {
+  width: 320px;
+  flex-shrink: 0;
+}
+
+@media (max-width: 768px) {
+  .responsive-flex-layout {
+    flex-direction: column-reverse; /* Sidebar typically drops below or above. Search filters often better on top, wait, reverse? Actually, let's keep column so main content gets pushed? No, sidebar is on the right currently. If column, main content is first, sidebar second. Let's make it column-reverse so sidebar (filters) are on top on mobile, or just standard column */
+    flex-direction: column; 
+    gap: var(--spacing-6);
+  }
+  
+  .responsive-flex-sidebar {
+    width: 100%;
+    order: -1; /* Puts the sidebar (filters) above the product list on mobile */
+    margin-bottom: var(--spacing-4);
+  }
+}
+
+.responsive-grid-2col {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+  gap: var(--spacing-10);
+  align-items: start;
+}
+
+@media (max-width: 768px) {
+  .responsive-grid-2col {
+    grid-template-columns: 1fr;
+    gap: var(--spacing-6);
+  }
+}
+
+.responsive-cart-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 2fr) minmax(300px, 1fr);
+  gap: var(--spacing-8);
+  align-items: start;
+}
+
+@media (max-width: 768px) {
+  .responsive-cart-layout {
+    grid-template-columns: 1fr;
+    gap: var(--spacing-6);
+  }
+}

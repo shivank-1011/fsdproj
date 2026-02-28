@@ -6,6 +6,7 @@ import api from '../lib/axios';
 
 import ProductCard from '../components/ProductCard';
 import FilterSidebar from '../components/FilterSidebar';
+import { LoadingState, ErrorState, EmptyState } from '../components/UIState';
 
 // Fetch products function
 const fetchProducts = async (params) => {
@@ -51,7 +52,7 @@ const Products = () => {
     }, [filters, setSearchParams]);
 
     // Query for products
-    const { data, isLoading, isError, error } = useQuery({
+    const { data, isLoading, isError, error, refetch } = useQuery({
         queryKey: ['products', filters],
         queryFn: () => fetchProducts(filters),
         keepPreviousData: true, // Keep old data while fetching new (for smooth pagination)
@@ -79,10 +80,10 @@ const Products = () => {
     };
 
     return (
-        <div style={{ display: 'flex', gap: 'var(--spacing-8)', flexDirection: 'row', alignItems: 'flex-start' }}>
+        <div className="responsive-flex-layout">
 
             {/* Main Content (Products List) */}
-            <div style={{ flex: 1, minWidth: 0 }}>
+            <div className="responsive-flex-main">
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 'var(--spacing-6)' }}>
                     <h1 style={{ fontSize: 'var(--font-size-2xl)', fontWeight: 'var(--font-weight-bold)', color: 'var(--color-primary)' }}>
                         All Products
@@ -95,19 +96,17 @@ const Products = () => {
                 </div>
 
                 {isLoading ? (
-                    <div style={{ display: 'flex', justifyContent: 'center', padding: 'var(--spacing-12)' }}>
-                        <Loader2 className="animate-spin text-[#eb5e28]" size={48} />
-                    </div>
+                    <LoadingState message="Fetching products..." fullHeight />
                 ) : isError ? (
-                    <div className="glass" style={{ padding: 'var(--spacing-6)', textAlign: 'center', color: '#ef4444' }}>
-                        Error loading products: {error.message}
-                    </div>
+                    <ErrorState message={error?.message || "Failed to load products"} onRetry={() => refetch()} fullHeight />
                 ) : !data || data.products.length === 0 ? (
-                    <div className="glass" style={{ padding: 'var(--spacing-12)', textAlign: 'center' }}>
-                        <h3 style={{ fontSize: 'var(--font-size-xl)', marginBottom: 'var(--spacing-2)' }}>No products found</h3>
-                        <p style={{ color: 'var(--color-text-muted)', marginBottom: 'var(--spacing-4)' }}>Try adjusting your filters or search criteria.</p>
-                        <button onClick={handleReset} className="button-primary">Clear Filters</button>
-                    </div>
+                    <EmptyState
+                        title="No products found"
+                        message="Try adjusting your filters or search criteria to find what you're looking for."
+                        actionLabel="Clear Filters"
+                        onAction={handleReset}
+                        fullHeight
+                    />
                 ) : (
                     <>
                         {/* Products Grid */}
@@ -175,7 +174,7 @@ const Products = () => {
             </div>
 
             {/* Sidebar (Filters on the Right) */}
-            <div style={{ width: '320px', flexShrink: 0 }}>
+            <div className="responsive-flex-sidebar">
                 <FilterSidebar
                     filters={filters}
                     onFilterChange={handleFilterChange}

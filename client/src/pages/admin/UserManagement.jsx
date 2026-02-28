@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
 import { useAdminStore } from "../../context/adminStore";
 import { format } from "date-fns";
-import { Loader2, ShieldAlert, ShieldCheck, Search } from "lucide-react";
+import { Loader2, ShieldAlert, ShieldCheck, Search, Users } from "lucide-react";
+import { LoadingState, ErrorState, EmptyState } from "../../components/UIState";
 import "./Admin.css";
 
 export default function UserManagement() {
@@ -48,8 +49,8 @@ export default function UserManagement() {
             </div>
 
             {error && (
-                <div style={{ padding: 'var(--spacing-4)', background: 'rgba(239,68,68,0.1)', color: 'var(--color-error)', borderRadius: 'var(--radius-md)', marginBottom: 'var(--spacing-6)' }}>
-                    {error}
+                <div style={{ marginBottom: 'var(--spacing-6)' }}>
+                    <ErrorState message={error} onRetry={() => fetchUsers(page, 10)} />
                 </div>
             )}
 
@@ -67,8 +68,8 @@ export default function UserManagement() {
                     <tbody>
                         {isLoading && users.length === 0 ? (
                             <tr>
-                                <td colSpan="5" className="admin-table-empty">
-                                    <Loader2 className="animate-spin" style={{ color: "var(--color-primary)", margin: "0 auto" }} size={24} />
+                                <td colSpan="5" className="admin-table-empty" style={{ padding: 0 }}>
+                                    <LoadingState message="Loading users..." />
                                 </td>
                             </tr>
                         ) : filteredUsers.length > 0 ? (
@@ -119,8 +120,8 @@ export default function UserManagement() {
                             ))
                         ) : (
                             <tr>
-                                <td colSpan="5" className="admin-table-empty">
-                                    No users found matching your criteria.
+                                <td colSpan="5" className="admin-table-empty" style={{ padding: 0 }}>
+                                    <EmptyState title="No Users Found" message="No users found matching your criteria." icon={Users} />
                                 </td>
                             </tr>
                         )}

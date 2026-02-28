@@ -4,6 +4,7 @@ import { Loader2, ArrowLeft, ShoppingCart, Store, ShieldCheck, Plus, Minus } fro
 import { useState } from 'react';
 import { useCartStore } from '../context/cartStore';
 import api from '../lib/axios';
+import { LoadingState, ErrorState } from '../components/UIState';
 
 const fetchProductById = async (id) => {
     const { data } = await api.get(`/products/${id}`);
@@ -17,27 +18,23 @@ const ProductDetails = () => {
     const { cart, addToCart, removeFromCart, updateQuantity } = useCartStore();
     const [isAdding, setIsAdding] = useState(false);
 
-    const { data: product, isLoading, isError, error } = useQuery({
+    const { data: product, isLoading, isError, error, refetch } = useQuery({
         queryKey: ['product', id],
         queryFn: () => fetchProductById(id),
     });
 
     if (isLoading) {
-        return (
-            <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '50vh' }}>
-                <Loader2 className="animate-spin text-[#eb5e28]" size={48} />
-            </div>
-        );
+        return <LoadingState message="Loading product details..." fullHeight />;
     }
 
     if (isError) {
         return (
-            <div className="glass" style={{ padding: 'var(--spacing-12)', textAlign: 'center', color: '#ef4444' }}>
-                <h3 style={{ fontSize: 'var(--font-size-xl)' }}>Error Loading Product</h3>
-                <p>{error.message}</p>
-                <button onClick={() => navigate('/products')} className="button-primary" style={{ marginTop: 'var(--spacing-4)' }}>
-                    Back to Products
-                </button>
+            <div style={{ padding: 'var(--spacing-8)' }}>
+                <ErrorState
+                    message={error?.message || "Error Loading Product"}
+                    onRetry={() => refetch()}
+                    fullHeight
+                />
             </div>
         );
     }
@@ -86,7 +83,7 @@ const ProductDetails = () => {
                 padding: 'var(--spacing-8)',
                 borderRadius: 'var(--radius-xl)'
             }}>
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(400px, 1fr))', gap: 'var(--spacing-10)', alignItems: 'start' }}>
+                <div className="responsive-grid-2col">
 
                     {/* Left Column: Image Gallery */}
                     <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--spacing-6)' }}>
@@ -268,8 +265,8 @@ const ProductDetails = () => {
                                     >
                                         <Minus size={24} />
                                     </button>
-                                    <span style={{ 
-                                        fontSize: 'var(--font-size-xl)', 
+                                    <span style={{
+                                        fontSize: 'var(--font-size-xl)',
                                         fontWeight: 'var(--font-weight-bold)',
                                         color: 'var(--color-text)',
                                         minWidth: '40px',

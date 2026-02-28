@@ -1,9 +1,11 @@
 import { useEffect } from 'react';
 import { useStoreStore } from '../../context/storeStore';
-import { Loader2 } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { LoadingState, EmptyState } from '../../components/UIState';
+import { Store } from 'lucide-react';
 
 export default function Dashboard() {
+    const navigate = useNavigate();
     const { fetchMyStore, store, isLoading } = useStoreStore();
 
     useEffect(() => {
@@ -11,11 +13,7 @@ export default function Dashboard() {
     }, [fetchMyStore]);
 
     if (isLoading) {
-        return (
-            <div style={{ display: 'flex', justifyContent: 'center', padding: 'var(--spacing-8)' }}>
-                <Loader2 className="animate-spin" style={{ color: 'var(--color-primary)' }} size={32} />
-            </div>
-        );
+        return <LoadingState message="Loading your dashboard..." fullHeight />;
     }
 
     return (
@@ -36,12 +34,13 @@ export default function Dashboard() {
                     </div>
                 </div>
             ) : (
-                <div>
-                    <p style={{ fontSize: 'var(--font-size-lg)', marginBottom: 'var(--spacing-4)' }}>You have not set up a store yet. Please create one to start selling!</p>
-                    <Link to="/seller/store-setup" className="button-primary" style={{ textDecoration: 'none', display: 'inline-block', padding: '10px 20px', borderRadius: 'var(--radius-md)' }}>
-                        Create Store
-                    </Link>
-                </div>
+                <EmptyState
+                    title="No Store Found"
+                    message="You have not set up a store yet. Please create one to start selling!"
+                    icon={Store}
+                    actionLabel="Create Store"
+                    onAction={() => navigate('/seller/store-setup')}
+                />
             )}
         </div>
     );

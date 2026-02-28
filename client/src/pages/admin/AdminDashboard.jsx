@@ -10,6 +10,7 @@ import {
     ResponsiveContainer,
 } from "recharts";
 import { Users, Store, IndianRupee, ShoppingBag, Loader2 } from "lucide-react";
+import { LoadingState, ErrorState } from "../../components/UIState";
 import "./Admin.css";
 
 export default function AdminDashboard() {
@@ -20,19 +21,11 @@ export default function AdminDashboard() {
     }, [fetchDashboardStats]);
 
     if (isLoading && !dashboardStats) {
-        return (
-            <div style={{ display: 'flex', height: '100%', alignItems: 'center', justifyContent: 'center' }}>
-                <Loader2 className="animate-spin" style={{ color: 'var(--color-primary)' }} size={40} />
-            </div>
-        );
+        return <LoadingState message="Loading dashboard statistics..." fullHeight />;
     }
 
     if (error) {
-        return (
-            <div style={{ padding: 'var(--spacing-4)', background: 'rgba(239,68,68,0.1)', color: 'var(--color-error)', borderRadius: 'var(--radius-md)' }}>
-                Failed to load dashboard stats: {error}
-            </div>
-        );
+        return <ErrorState message={error} onRetry={() => fetchDashboardStats()} fullHeight />;
     }
 
     if (!dashboardStats) return null;

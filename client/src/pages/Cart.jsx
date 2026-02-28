@@ -2,6 +2,7 @@ import { useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Trash2, Plus, Minus, ShoppingBag, Loader2 } from 'lucide-react';
 import { useCartStore } from '../context/cartStore';
+import { LoadingState, ErrorState, EmptyState } from '../components/UIState';
 
 const Cart = () => {
     const navigate = useNavigate();
@@ -12,27 +13,11 @@ const Cart = () => {
     }, [fetchCart]);
 
     if (isLoading && !cart) {
-        return (
-            <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '60vh' }}>
-                <Loader2 className="animate-spin text-[#eb5e28]" size={48} />
-            </div>
-        );
+        return <LoadingState message="Loading your cart..." fullHeight />;
     }
 
     if (error) {
-        return (
-            <div className="glass" style={{ padding: 'var(--spacing-6)', textAlign: 'center', color: 'var(--color-error)', margin: 'var(--spacing-6) auto', maxWidth: '600px' }}>
-                <h3>Error loading cart</h3>
-                <p>{error}</p>
-                <button
-                    onClick={() => fetchCart()}
-                    className="button-primary"
-                    style={{ marginTop: 'var(--spacing-4)' }}
-                >
-                    Retry
-                </button>
-            </div>
-        );
+        return <ErrorState message={error} onRetry={() => fetchCart()} fullHeight />;
     }
 
     const items = cart?.items || [];
@@ -42,39 +27,14 @@ const Cart = () => {
 
     if (items.length === 0) {
         return (
-            <div className="glass" style={{
-                padding: 'var(--spacing-12)',
-                textAlign: 'center',
-                maxWidth: '600px',
-                margin: 'var(--spacing-8) auto',
-                display: 'flex',
-                flexDirection: 'column',
-                alignItems: 'center',
-                gap: 'var(--spacing-4)'
-            }}>
-                <div style={{
-                    width: '80px',
-                    height: '80px',
-                    borderRadius: '50%',
-                    backgroundColor: 'rgba(235, 94, 40, 0.1)',
-                    display: 'flex',
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    color: 'var(--color-primary)'
-                }}>
-                    <ShoppingBag size={40} />
-                </div>
-                <h2 style={{ fontSize: 'var(--font-size-2xl)', color: 'var(--color-text)' }}>Your cart is empty</h2>
-                <p style={{ color: 'var(--color-text-muted)', marginBottom: 'var(--spacing-4)' }}>
-                    Looks like you haven't added anything to your cart yet.
-                </p>
-                <Link
-                    to="/products"
-                    className="button-primary"
-                >
-                    Start Shopping
-                </Link>
-            </div>
+            <EmptyState
+                title="Your cart is empty"
+                message="Looks like you haven't added anything to your cart yet."
+                icon={ShoppingBag}
+                actionLabel="Start Shopping"
+                onAction={() => navigate('/products')}
+                fullHeight
+            />
         );
     }
 
@@ -89,12 +49,7 @@ const Cart = () => {
                 Shopping Cart
             </h1>
 
-            <div style={{
-                display: 'grid',
-                gridTemplateColumns: 'minmax(0, 2fr) minmax(300px, 1fr)',
-                gap: 'var(--spacing-8)',
-                alignItems: 'start'
-            }}>
+            <div className="responsive-cart-layout">
                 {/* Cart Items List */}
                 <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--spacing-4)' }}>
                     {items.map((item) => (
