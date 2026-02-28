@@ -90,7 +90,12 @@ const MainLayout = () => {
                     </Link>
                     {user?.role === 'SELLER' && (
                         <Link to="/seller" style={{ textDecoration: 'none', color: 'var(--color-primary)', fontWeight: 'var(--font-weight-bold)' }}>
-                            Dashboard
+                            Seller Dashboard
+                        </Link>
+                    )}
+                    {user?.role === 'ADMIN' && (
+                        <Link to="/admin" style={{ textDecoration: 'none', color: 'var(--color-primary)', fontWeight: 'var(--font-weight-bold)' }}>
+                            Admin Dashboard
                         </Link>
                     )}
                     <Link to="/cart" style={{ textDecoration: 'none', color: 'var(--color-text)', position: 'relative' }}>

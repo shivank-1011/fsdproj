@@ -17,6 +17,13 @@ import Dashboard from "./pages/seller/Dashboard";
 import StoreCreation from "./pages/seller/StoreCreation";
 import ProductManagement from "./pages/seller/ProductManagement";
 
+// Admin Imports
+import AdminRoutes from "./components/AdminRoutes";
+import AdminLayout from "./layouts/AdminLayout";
+import AdminDashboard from "./pages/admin/AdminDashboard";
+import UserManagement from "./pages/admin/UserManagement";
+import StoreApproval from "./pages/admin/StoreApproval";
+
 function App() {
   const checkAuth = useAuthStore((state) => state.checkAuth);
   const checkAuthLoading = useAuthStore((state) => state.checkAuthLoading);
@@ -44,6 +51,14 @@ function App() {
           <Route index element={<Dashboard />} />
           <Route path="store-setup" element={<StoreCreation />} />
           <Route path="products" element={<ProductManagement />} />
+        </Route>
+      </Route>
+
+      <Route element={<AdminRoutes />}>
+        <Route path="/admin" element={<AdminLayout />}>
+          <Route index element={<AdminDashboard />} />
+          <Route path="users" element={<UserManagement />} />
+          <Route path="stores" element={<StoreApproval />} />
         </Route>
       </Route>
 
