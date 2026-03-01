@@ -88,7 +88,7 @@ const MainLayout = () => {
                     <Link to="/products" style={{ textDecoration: 'none', color: 'var(--color-text)', fontWeight: 'var(--font-weight-medium)' }}>
                         Products
                     </Link>
-                    {user?.role === 'SELLER' && (
+                    {(user?.role === 'SELLER' || user?.role === 'ADMIN') && (
                         <Link to="/seller" style={{ textDecoration: 'none', color: 'var(--color-primary)', fontWeight: 'var(--font-weight-bold)' }}>
                             Seller Dashboard
                         </Link>

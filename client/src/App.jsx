@@ -7,6 +7,7 @@ import MainLayout from "./layouts/MainLayout";
 import Home from "./pages/Home";
 import AuthPage from "./pages/AuthPage";
 import ProtectedRoutes from "./components/ProtectedRoutes";
+import GuestRoute from "./components/GuestRoute";
 import Products from "./pages/Products";
 import ProductDetails from "./pages/ProductDetails";
 import Cart from "./pages/Cart";
@@ -42,9 +43,11 @@ function App() {
 
   return (
     <Routes>
-      <Route path="/login" element={<AuthPage />} />
-      <Route path="/register" element={<AuthPage />} />
-      <Route path="/forgot-password" element={<AuthPage />} />
+      <Route element={<GuestRoute />}>
+        <Route path="/login" element={<AuthPage />} />
+        <Route path="/register" element={<AuthPage />} />
+        <Route path="/forgot-password" element={<AuthPage />} />
+      </Route>
 
       <Route element={<SellerRoutes />}>
         <Route path="/seller" element={<SellerLayout />}>
