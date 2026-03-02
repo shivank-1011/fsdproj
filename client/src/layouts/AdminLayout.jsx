@@ -12,6 +12,7 @@ export default function AdminLayout() {
         { name: "Dashboard", href: "/admin", icon: LayoutDashboard },
         { name: "Users Management", href: "/admin/users", icon: Users },
         { name: "Store Approvals", href: "/admin/stores", icon: Store },
+        { name: "Back to Home", href: "/", icon: Home },
     ];
 
     return (

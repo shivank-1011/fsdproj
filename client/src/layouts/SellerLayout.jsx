@@ -1,7 +1,8 @@
 import { Outlet, Link, useNavigate, useLocation } from 'react-router-dom';
-import { LayoutDashboard, Store, Package, LogOut } from 'lucide-react';
+import { LayoutDashboard, Store, Package, LogOut, Home } from 'lucide-react';
 import InteractiveBackground from '../components/InteractiveBackground';
 import { useAuthStore } from '../context/authStore';
+import './SellerLayout.css';
 
 const SellerLayout = () => {
     const { logout } = useAuthStore();
@@ -16,7 +17,7 @@ const SellerLayout = () => {
     const navItems = [
         { path: '/seller', label: 'Dashboard', icon: LayoutDashboard },
         { path: '/seller/products', label: 'Products', icon: Package },
-        { path: '/', label: 'Back to Store', icon: Store }
+        { path: '/', label: 'Back to Home', icon: Home }
     ];
 
     return (
@@ -48,18 +49,7 @@ const SellerLayout = () => {
                             <Link
                                 key={item.path}
                                 to={item.path}
-                                style={{
-                                    display: 'flex',
-                                    alignItems: 'center',
-                                    gap: 'var(--spacing-3)',
-                                    padding: '10px 16px',
-                                    borderRadius: '12px',
-                                    textDecoration: 'none',
-                                    color: isActive ? '#ffffff' : 'var(--color-text)',
-                                    backgroundColor: isActive ? 'var(--color-primary)' : 'transparent',
-                                    fontWeight: isActive ? 'var(--font-weight-bold)' : 'var(--font-weight-medium)',
-                                    transition: 'all 0.2s ease',
-                                }}
+                                className={`seller-nav-link ${isActive ? 'active' : ''}`}
                             >
                                 <Icon size={20} />
                                 {item.label}
@@ -70,18 +60,7 @@ const SellerLayout = () => {
 
                 <button
                     onClick={handleLogout}
-                    style={{
-                        display: 'flex',
-                        alignItems: 'center',
-                        gap: 'var(--spacing-3)',
-                        padding: '10px 16px',
-                        border: 'none',
-                        background: 'transparent',
-                        color: 'var(--color-text)',
-                        cursor: 'pointer',
-                        fontSize: 'var(--font-size-md)',
-                        fontWeight: 'var(--font-weight-medium)',
-                    }}
+                    className="seller-logout-btn"
                 >
                     <LogOut size={20} />
                     Logout

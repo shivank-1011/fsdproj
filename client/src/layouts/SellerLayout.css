@@ -1,0 +1,47 @@
+.seller-nav-link {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-3);
+  padding: 10px 16px;
+  border-radius: 12px;
+  text-decoration: none;
+  color: var(--color-text);
+  font-weight: var(--font-weight-medium);
+  transition: all 0.2s ease;
+  background-color: transparent;
+}
+
+.seller-nav-link:hover {
+  background: rgba(235, 94, 40, 0.1);
+  color: var(--color-primary);
+  transform: translateX(4px);
+}
+
+.seller-nav-link.active {
+  background: var(--color-primary);
+  color: #ffffff;
+  font-weight: var(--font-weight-bold);
+  box-shadow: var(--shadow-md);
+}
+
+.seller-logout-btn {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-3);
+  padding: 10px 16px;
+  border: none;
+  background: transparent;
+  color: var(--color-text);
+  cursor: pointer;
+  font-size: var(--font-size-md);
+  font-weight: var(--font-weight-medium);
+  border-radius: 12px;
+  transition: all 0.2s ease;
+  width: 100%;
+}
+
+.seller-logout-btn:hover {
+  background: rgba(239, 68, 68, 0.1);
+  color: var(--color-error);
+  transform: translateY(-2px);
+}

@@ -19,7 +19,11 @@ export const useProductStore = create((set) => ({
     } catch (error) {
       set({
         isLoading: false,
-        error: error.response?.data?.error || "Failed to create product",
+        error:
+          error.response?.data?.error ||
+          error.response?.data?.message ||
+          error.message ||
+          "Failed to create product",
       });
       throw error;
     }
