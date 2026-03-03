@@ -471,10 +471,10 @@ h6 {
 @media (max-width: 768px) {
   .responsive-flex-layout {
     flex-direction: column-reverse; /* Sidebar typically drops below or above. Search filters often better on top, wait, reverse? Actually, let's keep column so main content gets pushed? No, sidebar is on the right currently. If column, main content is first, sidebar second. Let's make it column-reverse so sidebar (filters) are on top on mobile, or just standard column */
-    flex-direction: column; 
+    flex-direction: column;
     gap: var(--spacing-6);
   }
-  
+
   .responsive-flex-sidebar {
     width: 100%;
     order: -1; /* Puts the sidebar (filters) above the product list on mobile */
@@ -507,5 +507,55 @@ h6 {
   .responsive-cart-layout {
     grid-template-columns: 1fr;
     gap: var(--spacing-6);
+  }
+}
+
+/* Responsive Navbar Styles */
+.main-nav {
+  display: flex;
+  gap: var(--spacing-6);
+  align-items: center;
+}
+
+.mobile-menu-btn {
+  display: none !important;
+}
+
+@media (max-width: 768px) {
+  .main-header {
+    flex-wrap: wrap; /* allow wrapping to stack items */
+  }
+
+  .main-search-form {
+    order: 3; /* Push the search bar to a new row below logo and menu */
+    width: 100%;
+    max-width: none !important; /* Override inline styles */
+    flex: 1 1 100% !important; /* Force inline flex: 1 to behave as full width row */
+    margin-top: var(--spacing-2);
+  }
+
+  .mobile-menu-btn {
+    display: inline-flex !important;
+    order: 2; /* keep menu icon in the top row next to logo */
+    margin-left: auto; /* Push it to the top right corner */
+  }
+
+  .main-nav {
+    display: none !important;
+    width: 100%;
+    background: transparent;
+    border: none;
+    flex-direction: column;
+    padding: var(--spacing-4) 0 0 0;
+    box-shadow: none;
+    z-index: 10;
+    gap: var(--spacing-4);
+    align-items: flex-start;
+    order: 4; /* Place below the search form */
+  }
+
+  /* Increase specificity to override other display:none !important rules */
+  nav.main-nav.mobile-open {
+    display: flex !important;
   }
 }

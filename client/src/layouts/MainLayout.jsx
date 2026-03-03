@@ -1,6 +1,6 @@
 import { Outlet, Link, useNavigate } from 'react-router-dom';
 import { useState } from 'react';
-import { Search, ShoppingCart, User } from 'lucide-react';
+import { Search, ShoppingCart, User, Menu, X } from 'lucide-react';
 import { useEffect } from 'react';
 import { useCartStore } from '../context/cartStore';
 import { useAuthStore } from '../context/authStore';
@@ -12,6 +12,11 @@ const MainLayout = () => {
     const [searchQuery, setSearchQuery] = useState('');
     const { cart, fetchCart } = useCartStore();
     const { user } = useAuthStore();
+    const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
+    const toggleMobileMenu = () => {
+        setIsMobileMenuOpen(!isMobileMenuOpen);
+    };
 
     useEffect(() => {
         fetchCart();
@@ -30,13 +35,16 @@ const MainLayout = () => {
     return (
         <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh', padding: 'var(--spacing-4)' }}>
             <InteractiveBackground />
-            <header className="glass" style={{
+            <header className="glass main-header" style={{
                 padding: 'var(--spacing-4)',
                 display: 'flex',
                 justifyContent: 'space-between',
                 alignItems: 'center',
                 marginBottom: 'var(--spacing-6)',
-                gap: 'var(--spacing-6)'
+                gap: 'var(--spacing-4)',
+                position: 'relative',
+                zIndex: 110,
+                overflow: 'visible'
             }}>
                 {/* Logo / App Name */}
                 <Link to="/" style={{ textDecoration: 'none' }}>
@@ -47,6 +55,7 @@ const MainLayout = () => {
 
                 {/* Global Search Bar */}
                 <form
+                    className="main-search-form"
                     onSubmit={handleSearch}
                     style={{
                         flex: 1,
@@ -83,22 +92,22 @@ const MainLayout = () => {
                     />
                 </form>
 
-                {/* Navigation */}
-                <nav style={{ display: 'flex', gap: 'var(--spacing-6)', alignItems: 'center' }}>
-                    <Link to="/products" style={{ textDecoration: 'none', color: 'var(--color-text)', fontWeight: 'var(--font-weight-medium)' }}>
+                {/* Navigation - Desktop & Mobile */}
+                <nav className={`main-nav ${isMobileMenuOpen ? 'mobile-open' : ''}`}>
+                    <Link to="/products" onClick={() => setIsMobileMenuOpen(false)} style={{ textDecoration: 'none', color: 'var(--color-text)', fontWeight: 'var(--font-weight-medium)' }}>
                         Products
                     </Link>
                     {(user?.role === 'SELLER' || user?.role === 'ADMIN') && (
-                        <Link to="/seller" style={{ textDecoration: 'none', color: 'var(--color-primary)', fontWeight: 'var(--font-weight-bold)' }}>
+                        <Link to="/seller" onClick={() => setIsMobileMenuOpen(false)} style={{ textDecoration: 'none', color: 'var(--color-primary)', fontWeight: 'var(--font-weight-bold)' }}>
                             Seller Dashboard
                         </Link>
                     )}
                     {user?.role === 'ADMIN' && (
-                        <Link to="/admin" style={{ textDecoration: 'none', color: 'var(--color-primary)', fontWeight: 'var(--font-weight-bold)' }}>
+                        <Link to="/admin" onClick={() => setIsMobileMenuOpen(false)} style={{ textDecoration: 'none', color: 'var(--color-primary)', fontWeight: 'var(--font-weight-bold)' }}>
                             Admin Dashboard
                         </Link>
                     )}
-                    <Link to="/cart" style={{ textDecoration: 'none', color: 'var(--color-text)', position: 'relative' }}>
+                    <Link to="/cart" onClick={() => setIsMobileMenuOpen(false)} style={{ textDecoration: 'none', color: 'var(--color-text)', position: 'relative' }}>
                         <ShoppingCart size={24} />
                         {cartItemCount > 0 && (
                             <span style={{
@@ -121,8 +130,23 @@ const MainLayout = () => {
                             </span>
                         )}
                     </Link>
-                    {/* Add User profile link if needed here */}
                 </nav>
+
+                {/* Mobile Menu Button */}
+                <button
+                    className="mobile-menu-btn"
+                    onClick={toggleMobileMenu}
+                    style={{
+                        background: 'none',
+                        border: 'none',
+                        color: 'var(--color-text)',
+                        cursor: 'pointer',
+                        padding: '4px',
+                        flexShrink: 0,
+                    }}
+                >
+                    {isMobileMenuOpen ? <X size={28} /> : <Menu size={28} />}
+                </button>
             </header>
 
             <main className="glass" style={{ flex: 1, padding: 'var(--spacing-6)', maxWidth: '1200px', margin: '0 auto', width: '100%', marginBottom: 'var(--spacing-6)' }}>
