@@ -6,6 +6,13 @@ set -e
 APP_DIR="/home/ubuntu/fsdproj"
 echo "Starting idempotent deployment at $APP_DIR"
 
+# Check if Node.js & NPM are installed; if not, install them
+if ! command -v npm &> /dev/null; then
+    echo "NPM not found. Installing Node.js..."
+    curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash -
+    sudo apt-get install -y nodejs
+fi
+
 # Idempotently check and install PM2 globally
 if ! command -v pm2 &> /dev/null; then
     echo "Installing pm2 globally..."
