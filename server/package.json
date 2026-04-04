@@ -15,7 +15,7 @@
   "license": "ISC",
   "type": "commonjs",
   "dependencies": {
-    "@prisma/client": "5.19.1",
+    "@prisma/client": "7.6.0",
     "axios": "^1.13.5",
     "bcrypt": "^6.0.0",
     "cloudinary": "^2.9.0",
