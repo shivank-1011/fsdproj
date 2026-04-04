@@ -1,6 +1,19 @@
 const request = require("supertest");
 const app = require("../../app");
 
+jest.mock("@prisma/client", () => {
+  return {
+    PrismaClient: jest.fn().mockImplementation(() => {
+      return {
+        product: {
+          findMany: jest.fn().mockResolvedValue([]),
+          count: jest.fn().mockResolvedValue(0),
+        },
+      };
+    }),
+  };
+});
+
 describe("API Integration Tests", () => {
   describe("Public Endpoints", () => {
     it("GET / should return Welcome message", async () => {
