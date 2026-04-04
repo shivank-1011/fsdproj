@@ -15,7 +15,7 @@ jobs:
 
       # Build client on CI/CD runner to avoid taxing the EC2 server resources
       - name: Setup Node.js (Client Build)
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v6
         with:
           node-version: '20'
           cache: 'npm'
