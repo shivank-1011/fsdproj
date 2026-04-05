@@ -1,27 +1,21 @@
 const express = require("express");
-const {
-  getAllUsers,
-  banUser,
-  unbanUser,
-  approveStore,
-  getAllStores,
-  getDashboardStats,
-} = require("../controllers/adminController");
+const AdminController = require("../controllers/adminController");
 const {
   authenticateToken,
   authorizeRoles,
 } = require("../middleware/authMiddleware");
 
 const router = express.Router();
+const adminController = new AdminController();
 
 router.use(authenticateToken, authorizeRoles("ADMIN"));
 
-router.get("/dashboard", getDashboardStats);
-router.get("/users", getAllUsers);
-router.post("/users/ban", banUser);
-router.post("/users/unban", unbanUser);
+router.get("/dashboard", adminController.getDashboardStats);
+router.get("/users", adminController.getAllUsers);
+router.post("/users/ban", adminController.banUser);
+router.post("/users/unban", adminController.unbanUser);
 
-router.get("/stores", getAllStores);
-router.post("/stores/approve", approveStore);
+router.get("/stores", adminController.getAllStores);
+router.post("/stores/approve", adminController.approveStore);
 
 module.exports = router;

@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import api from "../lib/axios";
+import { cartApiService } from "../services/CartApiService";
 
 export const useCartStore = create((set, get) => ({
   cart: null,
@@ -9,8 +9,8 @@ export const useCartStore = create((set, get) => ({
   fetchCart: async () => {
     set({ isLoading: true, error: null });
     try {
-      const response = await api.get("/cart");
-      set({ cart: response.data, isLoading: false });
+      const response = await cartApiService.getCart();
+      set({ cart: response, isLoading: false });
     } catch (error) {
       set({
         error: error.response?.data?.error || "Failed to fetch cart",
@@ -23,8 +23,8 @@ export const useCartStore = create((set, get) => ({
     const previousCart = get().cart;
 
     try {
-      const response = await api.post("/cart/add", { productId, quantity });
-      set({ cart: response.data });
+      const response = await cartApiService.addToCart(productId, quantity);
+      set({ cart: response });
     } catch (error) {
       set({
         cart: previousCart,
@@ -45,10 +45,8 @@ export const useCartStore = create((set, get) => ({
     }
 
     try {
-      const response = await api.put(`/cart/update/${cartItemId}`, {
-        quantity: newQuantity,
-      });
-      set({ cart: response.data });
+      const response = await cartApiService.updateQuantity(cartItemId, newQuantity);
+      set({ cart: response });
     } catch (error) {
       set({
         cart: previousCart,
@@ -69,8 +67,8 @@ export const useCartStore = create((set, get) => ({
     }
 
     try {
-      const response = await api.delete(`/cart/remove/${cartItemId}`);
-      set({ cart: response.data });
+      const response = await cartApiService.removeFromCart(cartItemId);
+      set({ cart: response });
     } catch (error) {
       set({
         cart: previousCart,
@@ -88,7 +86,7 @@ export const useCartStore = create((set, get) => ({
     }
 
     try {
-      await api.delete("/cart/clear");
+      await cartApiService.clearCart();
       set({ cart: { ...previousCart, items: [] } });
     } catch (error) {
       set({

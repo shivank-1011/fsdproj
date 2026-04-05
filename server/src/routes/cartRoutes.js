@@ -1,7 +1,9 @@
 const express = require("express");
-const router = express.Router();
-const cartController = require("../controllers/cartController");
+const CartController = require("../controllers/cartController");
 const { authenticateToken } = require("../middleware/authMiddleware");
+
+const router = express.Router();
+const cartController = new CartController();
 
 router.use(authenticateToken);
 

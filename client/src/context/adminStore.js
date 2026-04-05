@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import axios from "../lib/axios";
+import { adminApiService } from "../services/AdminApiService";
 
 export const useAdminStore = create((set) => ({
   users: [],
@@ -12,8 +12,8 @@ export const useAdminStore = create((set) => ({
   fetchDashboardStats: async () => {
     set({ isLoading: true, error: null });
     try {
-      const res = await axios.get("/admin/dashboard");
-      set({ dashboardStats: res.data, isLoading: false });
+      const response = await adminApiService.getDashboardStats();
+      set({ dashboardStats: response, isLoading: false });
     } catch (error) {
       set({
         error: error.response?.data?.error || "Error fetching stats",
@@ -25,10 +25,10 @@ export const useAdminStore = create((set) => ({
   fetchUsers: async (page = 1, limit = 10) => {
     set({ isLoading: true, error: null });
     try {
-      const res = await axios.get(`/admin/users?page=${page}&limit=${limit}`);
+      const response = await adminApiService.fetchUsers(page, limit);
       set({
-        users: res.data.users,
-        totalPages: res.data.totalPages,
+        users: response.users,
+        totalPages: response.totalPages,
         isLoading: false,
       });
     } catch (error) {
@@ -42,7 +42,7 @@ export const useAdminStore = create((set) => ({
   banUser: async (userId) => {
     set({ isLoading: true, error: null });
     try {
-      await axios.post("/admin/users/ban", { userId });
+      await adminApiService.banUser(userId);
       set((state) => ({
         users: state.users.map((u) =>
           u.id === userId ? { ...u, isBanned: true } : u,
@@ -60,7 +60,7 @@ export const useAdminStore = create((set) => ({
   unbanUser: async (userId) => {
     set({ isLoading: true, error: null });
     try {
-      await axios.post("/admin/users/unban", { userId });
+      await adminApiService.unbanUser(userId);
       set((state) => ({
         users: state.users.map((u) =>
           u.id === userId ? { ...u, isBanned: false } : u,
@@ -78,10 +78,10 @@ export const useAdminStore = create((set) => ({
   fetchStores: async (page = 1, limit = 10) => {
     set({ isLoading: true, error: null });
     try {
-      const res = await axios.get(`/admin/stores?page=${page}&limit=${limit}`);
+      const response = await adminApiService.fetchStores(page, limit);
       set({
-        stores: res.data.stores,
-        totalPages: res.data.totalPages,
+        stores: response.stores,
+        totalPages: response.totalPages,
         isLoading: false,
       });
     } catch (error) {
@@ -95,7 +95,7 @@ export const useAdminStore = create((set) => ({
   approveStore: async (storeId) => {
     set({ isLoading: true, error: null });
     try {
-      await axios.post("/admin/stores/approve", { storeId });
+      await adminApiService.approveStore(storeId);
       set((state) => ({
         stores: state.stores.map((s) =>
           s.id === storeId ? { ...s, isVerified: true } : s,

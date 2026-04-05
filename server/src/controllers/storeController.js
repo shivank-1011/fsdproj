@@ -1,103 +1,54 @@
-const { PrismaClient } = require("@prisma/client");
-const prisma = new PrismaClient();
+const StoreService = require("../services/StoreService");
 
-const createStore = async (req, res) => {
-  try {
-    const { name, description } = req.body;
-    const userId = req.user.userId;
+class StoreController {
+  constructor() {
+    this.storeService = new StoreService();
+  }
 
-    const existingStore = await prisma.store.findUnique({
-      where: { userId },
-    });
-
-    if (existingStore) {
-      return res.status(400).json({ error: "User already has a store" });
+  createStore = async (req, res) => {
+    try {
+      const data = await this.storeService.createStore(req.user.userId, req.body);
+      res.status(201).json(data);
+    } catch (error) {
+      res.status(error.statusCode || 500).json({ error: error.message });
     }
+  };
 
-    const store = await prisma.store.create({
-      data: {
-        name,
-        description,
-        userId,
-      },
-    });
-
-    res.status(201).json({ store });
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-};
-
-const getStore = async (req, res) => {
-  try {
-    const store = await prisma.store.findUnique({
-      where: { id: req.params.id },
-      include: { products: true },
-    });
-
-    if (!store) {
-      return res.status(404).json({ error: "Store not found" });
+  getStore = async (req, res) => {
+    try {
+      const data = await this.storeService.getStore(req.params.id);
+      res.json(data);
+    } catch (error) {
+      res.status(error.statusCode || 500).json({ error: error.message });
     }
+  };
 
-    res.json({ store });
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-};
-
-const updateStore = async (req, res) => {
-  try {
-    const { name, description } = req.body;
-    const storeId = req.params.id;
-
-    const updatedStore = await prisma.store.update({
-      where: { id: storeId },
-      data: { name, description },
-    });
-
-    res.json({ store: updatedStore });
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-};
-
-const deleteStore = async (req, res) => {
-  try {
-    const storeId = req.params.id;
-
-    await prisma.store.delete({
-      where: { id: storeId },
-    });
-
-    res.json({ message: "Store deleted successfully" });
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-};
-
-const getStoreByOwner = async (req, res) => {
-  try {
-    const userId = req.user.userId;
-
-    const store = await prisma.store.findUnique({
-      where: { userId },
-      include: { products: true },
-    });
-
-    if (!store) {
-      return res.status(404).json({ error: "Store not found" });
+  getStoreByOwner = async (req, res) => {
+    try {
+      const data = await this.storeService.getStoreByOwner(req.user.userId);
+      res.json(data);
+    } catch (error) {
+      res.status(error.statusCode || 500).json({ error: error.message });
     }
+  };
 
-    res.json({ store });
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-};
+  updateStore = async (req, res) => {
+    try {
+      const data = await this.storeService.updateStore(req.params.id, req.body);
+      res.json(data);
+    } catch (error) {
+      res.status(error.statusCode || 500).json({ error: error.message });
+    }
+  };
 
-module.exports = {
-  createStore,
-  getStore,
-  getStoreByOwner,
-  updateStore,
-  deleteStore,
-};
+  deleteStore = async (req, res) => {
+    try {
+      await this.storeService.deleteStore(req.params.id);
+      res.json({ message: "Store deleted successfully" });
+    } catch (error) {
+      res.status(error.statusCode || 500).json({ error: error.message });
+    }
+  };
+}
+
+module.exports = StoreController;

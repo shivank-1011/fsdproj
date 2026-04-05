@@ -224,7 +224,7 @@ const MainLayout = () => {
           color: "var(--color-text-muted)",
         }}
       >
-        <p>&copy; {new Date().getFullYear()} App Name. All rights reserved.</p>
+        <p>&copy; {new Date().getFullYear()} UnityMart. All rights reserved.</p>
       </footer>
     </div>
   );

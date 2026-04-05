@@ -1,21 +1,38 @@
 import { create } from "zustand";
-import axios from "../lib/axios";
+import { productApiService } from "../services/ProductApiService";
 
 export const useProductStore = create((set) => ({
+  products: [],
+  total: 0,
   isLoading: false,
   error: null,
+
+  fetchProducts: async (filters = {}) => {
+    set({ isLoading: true, error: null });
+    try {
+      const response = await productApiService.getProducts(filters);
+      set({
+        products: response.products,
+        total: response.total,
+        isLoading: false,
+      });
+      return response;
+    } catch (error) {
+      set({
+        isLoading: false,
+        error: error.response?.data?.error || "Failed to fetch products",
+      });
+      throw error;
+    }
+  },
 
   createProduct: async (productData) => {
     set({ isLoading: true, error: null });
     try {
       // productData is expected to be FormData so we can handle image uploads properly
-      const response = await axios.post("/products", productData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      });
+      const response = await productApiService.createProduct(productData);
       set({ isLoading: false });
-      return response.data.product;
+      return response.product;
     } catch (error) {
       set({
         isLoading: false,
@@ -34,9 +51,9 @@ export const useProductStore = create((set) => ({
     try {
       // Note: Backend PUT /products/:id doesn't handle multipart uploads right now,
       // so this expects standard JSON payload.
-      const response = await axios.put(`/products/${id}`, productData);
+      const response = await productApiService.updateProduct(id, productData);
       set({ isLoading: false });
-      return response.data.product;
+      return response.product;
     } catch (error) {
       set({
         isLoading: false,
@@ -49,7 +66,7 @@ export const useProductStore = create((set) => ({
   deleteProduct: async (id) => {
     set({ isLoading: true, error: null });
     try {
-      await axios.delete(`/products/${id}`);
+      await productApiService.deleteProduct(id);
       set({ isLoading: false });
       return true;
     } catch (error) {

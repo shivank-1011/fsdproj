@@ -1,202 +1,66 @@
-const bcrypt = require("bcrypt");
-const jwt = require("jsonwebtoken");
-const crypto = require("crypto");
-const { OAuth2Client } = require("google-auth-library");
-const { PrismaClient } = require("@prisma/client");
-const {
-  generateAccessToken,
-  generateRefreshToken,
-} = require("../utils/tokens");
+const AuthService = require("../services/AuthService");
 
-const prisma = new PrismaClient();
-const googleClient = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
-
-const register = async (req, res) => {
-  try {
-    const { email, password, name, role } = req.body;
-    const existingUser = await prisma.user.findUnique({ where: { email } });
-    if (existingUser)
-      return res.status(400).json({ error: "Email already exists" });
-
-    const hashedPassword = await bcrypt.hash(password, 10);
-    const user = await prisma.user.create({
-      data: {
-        email,
-        password: hashedPassword,
-        name,
-        role: role || "USER",
-      },
-    });
-
-    const accessToken = generateAccessToken(user);
-    const refreshToken = generateRefreshToken(user);
-
-    await prisma.user.update({
-      where: { id: user.id },
-      data: { refreshToken },
-    });
-
-    res.status(201).json({
-      user: {
-        id: user.id,
-        email: user.email,
-        name: user.name,
-        role: user.role,
-      },
-      accessToken,
-      refreshToken,
-    });
-  } catch (error) {
-    res.status(500).json({ error: error.message });
+class AuthController {
+  constructor() {
+    this.authService = new AuthService();
   }
-};
 
-const login = async (req, res) => {
-  try {
-    const { email, password } = req.body;
-    const user = await prisma.user.findUnique({ where: { email } });
-    if (!user) return res.status(401).json({ error: "Invalid credentials" });
-
-    const validPassword = await bcrypt.compare(password, user.password);
-    if (!validPassword)
-      return res.status(401).json({ error: "Invalid credentials" });
-
-    const accessToken = generateAccessToken(user);
-    const refreshToken = generateRefreshToken(user);
-
-    await prisma.user.update({
-      where: { id: user.id },
-      data: { refreshToken },
-    });
-
-    res.json({
-      user: {
-        id: user.id,
-        email: user.email,
-        name: user.name,
-        role: user.role,
-      },
-      accessToken,
-      refreshToken,
-    });
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-};
-
-const refreshToken = async (req, res) => {
-  const { refreshToken } = req.body;
-  if (!refreshToken)
-    return res.status(401).json({ error: "Refresh token required" });
-
-  try {
-    const user = await prisma.user.findFirst({ where: { refreshToken } });
-    if (!user) return res.status(403).json({ error: "Invalid refresh token" });
-
-    jwt.verify(
-      refreshToken,
-      process.env.REFRESH_TOKEN_SECRET,
-      (err, decoded) => {
-        if (err)
-          return res
-            .status(403)
-            .json({ error: "Invalid or expired refresh token" });
-        const accessToken = generateAccessToken(user);
-        res.json({ accessToken });
-      },
-    );
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-};
-
-const logout = async (req, res) => {
-  try {
-    const { refreshToken } = req.body;
-    if (refreshToken) {
-      await prisma.user.updateMany({
-        where: { refreshToken: refreshToken },
-        data: { refreshToken: null },
-      });
+  register = async (req, res) => {
+    try {
+      const data = await this.authService.register(req.body);
+      res.status(201).json(data);
+    } catch (error) {
+      res.status(error.statusCode || 500).json({ error: error.message });
     }
+  };
 
-    res.json({ message: "Logged out successfully" });
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-};
-
-const me = async (req, res) => {
-  try {
-    const user = await prisma.user.findUnique({
-      where: { id: req.user.userId },
-      select: {
-        id: true,
-        email: true,
-        name: true,
-        role: true,
-        createdAt: true,
-      },
-    });
-    res.json({ user });
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-};
-
-const googleLogin = async (req, res) => {
-  try {
-    const { idToken, role } = req.body;
-
-    // Verify the Google ID token
-    const ticket = await googleClient.verifyIdToken({
-      idToken,
-      audience: process.env.GOOGLE_CLIENT_ID,
-    });
-    const payload = ticket.getPayload();
-    const { email, name } = payload;
-
-    // Check if user exists
-    let user = await prisma.user.findUnique({ where: { email } });
-
-    if (!user) {
-      // Create user if not exists with a random password
-      const randomPassword = crypto.randomBytes(16).toString("hex");
-      const hashedPassword = await bcrypt.hash(randomPassword, 10);
-      user = await prisma.user.create({
-        data: {
-          email,
-          name,
-          password: hashedPassword,
-          role: role || "USER",
-        },
-      });
+  login = async (req, res) => {
+    try {
+      const data = await this.authService.login(req.body);
+      res.json(data);
+    } catch (error) {
+      res.status(error.statusCode || 500).json({ error: error.message });
     }
+  };
 
-    const accessToken = generateAccessToken(user);
-    const refreshToken = generateRefreshToken(user);
+  googleLogin = async (req, res) => {
+    try {
+      const data = await this.authService.googleLogin(req.body);
+      res.status(200).json(data);
+    } catch (error) {
+      console.error("Google Auth Error:", error);
+      res.status(error.statusCode || 500).json({ error: error.message || "Google authentication failed" });
+    }
+  };
 
-    await prisma.user.update({
-      where: { id: user.id },
-      data: { refreshToken },
-    });
+  refreshToken = async (req, res) => {
+    try {
+      const { refreshToken } = req.body;
+      const data = await this.authService.refreshAccessToken(refreshToken);
+      res.json(data);
+    } catch (error) {
+      res.status(error.statusCode || 500).json({ error: error.message });
+    }
+  };
 
-    res.status(200).json({
-      user: {
-        id: user.id,
-        email: user.email,
-        name: user.name,
-        role: user.role,
-      },
-      accessToken,
-      refreshToken,
-    });
-  } catch (error) {
-    console.error("Google Auth Error:", error);
-    res
-      .status(500)
-      .json({ error: error.message || "Google authentication failed" });
-  }
-};
+  logout = async (req, res) => {
+    try {
+      const { refreshToken } = req.body;
+      await this.authService.logout(refreshToken);
+      res.json({ message: "Logged out successfully" });
+    } catch (error) {
+      res.status(error.statusCode || 500).json({ error: error.message });
+    }
+  };
 
-module.exports = { register, login, googleLogin, refreshToken, logout, me };
+  me = async (req, res) => {
+    try {
+      const data = await this.authService.getMe(req.user.userId);
+      res.json(data);
+    } catch (error) {
+      res.status(error.statusCode || 500).json({ error: error.message });
+    }
+  };
+}
+
+module.exports = AuthController;

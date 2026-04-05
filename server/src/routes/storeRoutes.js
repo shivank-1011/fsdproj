@@ -1,11 +1,5 @@
 const express = require("express");
-const {
-  createStore,
-  getStore,
-  getStoreByOwner,
-  updateStore,
-  deleteStore,
-} = require("../controllers/storeController");
+const StoreController = require("../controllers/storeController");
 const {
   authenticateToken,
   authorizeRoles,
@@ -13,29 +7,30 @@ const {
 } = require("../middleware/authMiddleware");
 
 const router = express.Router();
+const storeController = new StoreController();
 
 router.post(
   "/",
   authenticateToken,
   authorizeRoles("SELLER", "ADMIN"),
-  createStore,
+  storeController.createStore,
 );
 
 router.get(
   "/me",
   authenticateToken,
   authorizeRoles("SELLER", "ADMIN"),
-  getStoreByOwner,
+  storeController.getStoreByOwner,
 );
 
-router.get("/:id", authenticateToken, getStore);
+router.get("/:id", authenticateToken, storeController.getStore);
 
 router.put(
   "/:id",
   authenticateToken,
   authorizeRoles("SELLER", "ADMIN"),
   checkStoreOwnership,
-  updateStore,
+  storeController.updateStore,
 );
 
 router.delete(
@@ -43,7 +38,7 @@ router.delete(
   authenticateToken,
   authorizeRoles("SELLER", "ADMIN"),
   checkStoreOwnership,
-  deleteStore,
+  storeController.deleteStore,
 );
 
 module.exports = router;

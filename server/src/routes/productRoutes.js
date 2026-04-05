@@ -1,11 +1,5 @@
 const express = require("express");
-const {
-  createProduct,
-  getProducts,
-  getProduct,
-  updateProduct,
-  deleteProduct,
-} = require("../controllers/productController");
+const ProductController = require("../controllers/productController");
 const {
   authenticateToken,
   authorizeRoles,
@@ -19,17 +13,19 @@ const {
 } = require("../validations/productValidation");
 
 const router = express.Router();
+const productController = new ProductController();
+
 router.post(
   "/",
   authenticateToken,
   authorizeRoles("SELLER", "ADMIN"),
   upload.array("images", 5),
   validate(createProductSchema),
-  createProduct,
+  productController.createProduct,
 );
 
-router.get("/", getProducts);
-router.get("/:id", getProduct);
+router.get("/", productController.getProducts);
+router.get("/:id", productController.getProduct);
 
 router.put(
   "/:id",
@@ -37,7 +33,7 @@ router.put(
   authorizeRoles("SELLER", "ADMIN"),
   checkProductOwnership,
   validate(updateProductSchema),
-  updateProduct,
+  productController.updateProduct,
 );
 
 router.delete(
@@ -45,7 +41,7 @@ router.delete(
   authenticateToken,
   authorizeRoles("SELLER", "ADMIN"),
   checkProductOwnership,
-  deleteProduct,
+  productController.deleteProduct,
 );
 
 module.exports = router;

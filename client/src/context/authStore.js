@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import axios from "../lib/axios";
+import { authApiService } from "../services/AuthApiService";
 
 export const useAuthStore = create((set) => ({
   user: null,
@@ -11,20 +11,15 @@ export const useAuthStore = create((set) => ({
   register: async (email, password, name, role) => {
     set({ isLoading: true, error: null });
     try {
-      const response = await axios.post("/auth/register", {
-        email,
-        password,
-        name,
-        role,
-      });
-      localStorage.setItem("accessToken", response.data.accessToken);
-      localStorage.setItem("refreshToken", response.data.refreshToken);
+      const response = await authApiService.register(email, password, name, role);
+      localStorage.setItem("accessToken", response.accessToken);
+      localStorage.setItem("refreshToken", response.refreshToken);
       set({
-        user: response.data.user,
+        user: response.user,
         isAuthenticated: true,
         isLoading: false,
       });
-      return response.data;
+      return response;
     } catch (error) {
       set({
         isLoading: false,
@@ -40,18 +35,15 @@ export const useAuthStore = create((set) => ({
   login: async (email, password) => {
     set({ isLoading: true, error: null });
     try {
-      const response = await axios.post("/auth/login", {
-        email,
-        password,
-      });
-      localStorage.setItem("accessToken", response.data.accessToken);
-      localStorage.setItem("refreshToken", response.data.refreshToken);
+      const response = await authApiService.login(email, password);
+      localStorage.setItem("accessToken", response.accessToken);
+      localStorage.setItem("refreshToken", response.refreshToken);
       set({
-        user: response.data.user,
+        user: response.user,
         isAuthenticated: true,
         isLoading: false,
       });
-      return response.data;
+      return response;
     } catch (error) {
       set({
         isLoading: false,
@@ -67,18 +59,15 @@ export const useAuthStore = create((set) => ({
   googleAuth: async (idToken, role) => {
     set({ isLoading: true, error: null });
     try {
-      const response = await axios.post("/auth/google", {
-        idToken,
-        role,
-      });
-      localStorage.setItem("accessToken", response.data.accessToken);
-      localStorage.setItem("refreshToken", response.data.refreshToken);
+      const response = await authApiService.googleAuth(idToken, role);
+      localStorage.setItem("accessToken", response.accessToken);
+      localStorage.setItem("refreshToken", response.refreshToken);
       set({
-        user: response.data.user,
+        user: response.user,
         isAuthenticated: true,
         isLoading: false,
       });
-      return response.data;
+      return response;
     } catch (error) {
       set({
         isLoading: false,
@@ -95,7 +84,7 @@ export const useAuthStore = create((set) => ({
     set({ isLoading: true, error: null });
     try {
       const refreshToken = localStorage.getItem("refreshToken");
-      await axios.post("/auth/logout", { refreshToken });
+      await authApiService.logout(refreshToken);
       localStorage.removeItem("accessToken");
       localStorage.removeItem("refreshToken");
       set({
@@ -125,9 +114,9 @@ export const useAuthStore = create((set) => ({
       if (!token) {
         throw new Error("No token found");
       }
-      const response = await axios.get("/auth/me");
+      const response = await authApiService.getMe();
       set({
-        user: response.data.user,
+        user: response.user,
         isAuthenticated: true,
         checkAuthLoading: false,
       });

@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import axios from "../lib/axios";
+import { storeApiService } from "../services/StoreApiService";
 
 export const useStoreStore = create((set) => ({
   store: null,
@@ -9,9 +9,9 @@ export const useStoreStore = create((set) => ({
   fetchMyStore: async () => {
     set({ isLoading: true, error: null });
     try {
-      const response = await axios.get("/stores/me");
-      set({ store: response.data.store, isLoading: false });
-      return response.data.store;
+      const response = await storeApiService.getMyStore();
+      set({ store: response.store, isLoading: false });
+      return response.store;
     } catch (error) {
       set({
         isLoading: false,
@@ -29,9 +29,9 @@ export const useStoreStore = create((set) => ({
   createStore: async (storeData) => {
     set({ isLoading: true, error: null });
     try {
-      const response = await axios.post("/stores", storeData);
-      set({ store: response.data.store, isLoading: false });
-      return response.data.store;
+      const response = await storeApiService.createStore(storeData);
+      set({ store: response.store, isLoading: false });
+      return response.store;
     } catch (error) {
       set({
         isLoading: false,
@@ -44,12 +44,12 @@ export const useStoreStore = create((set) => ({
   updateStore: async (id, storeData) => {
     set({ isLoading: true, error: null });
     try {
-      const response = await axios.put(`/stores/${id}`, storeData);
+      const response = await storeApiService.updateStore(id, storeData);
       set((state) => ({
-        store: { ...state.store, ...response.data.store },
+        store: { ...state.store, ...response.store },
         isLoading: false,
       }));
-      return response.data;
+      return response;
     } catch (error) {
       set({
         isLoading: false,
