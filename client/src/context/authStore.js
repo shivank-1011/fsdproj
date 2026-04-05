@@ -11,7 +11,12 @@ export const useAuthStore = create((set) => ({
   register: async (email, password, name, role) => {
     set({ isLoading: true, error: null });
     try {
-      const response = await authApiService.register(email, password, name, role);
+      const response = await authApiService.register(
+        email,
+        password,
+        name,
+        role,
+      );
       localStorage.setItem("accessToken", response.accessToken);
       localStorage.setItem("refreshToken", response.refreshToken);
       set({

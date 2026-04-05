@@ -23,7 +23,13 @@ const Home = () => {
   }, [fetchProducts]);
 
   return (
-    <div style={{ display: "flex", flexDirection: "column", gap: "var(--spacing-12)" }}>
+    <div
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        gap: "var(--spacing-12)",
+      }}
+    >
       {/* Hero Section */}
       <section
         className="glass"
@@ -53,10 +59,24 @@ const Home = () => {
             borderRadius: "50%",
           }}
         />
-        
-        <div style={{ display: "flex", alignItems: "center", gap: "var(--spacing-2)", color: "var(--color-primary)" }}>
+
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            gap: "var(--spacing-2)",
+            color: "var(--color-primary)",
+          }}
+        >
           <Sparkles size={20} />
-          <span style={{ fontWeight: "var(--font-weight-bold)", fontSize: "var(--font-size-sm)", textTransform: "uppercase", letterSpacing: "2px" }}>
+          <span
+            style={{
+              fontWeight: "var(--font-weight-bold)",
+              fontSize: "var(--font-size-sm)",
+              textTransform: "uppercase",
+              letterSpacing: "2px",
+            }}
+          >
             New Collection 2024
           </span>
         </div>
@@ -70,7 +90,8 @@ const Home = () => {
             margin: "0 auto",
           }}
         >
-          Elevate Your Lifestyle with <span style={{ color: "var(--color-primary)" }}>UnityMart</span>
+          Elevate Your Lifestyle with{" "}
+          <span style={{ color: "var(--color-primary)" }}>UnityMart</span>
         </h1>
 
         <p
@@ -81,14 +102,29 @@ const Home = () => {
             margin: "0 auto",
           }}
         >
-          Discover a curated collection of premium products designed for the modern individual. Quality meets minimalism.
+          Discover a curated collection of premium products designed for the
+          modern individual. Quality meets minimalism.
         </p>
 
-        <div style={{ display: "flex", gap: "var(--spacing-4)", marginTop: "var(--spacing-4)" }}>
-          <Link to="/products" className="button-primary" style={{ textDecoration: "none", padding: "16px 32px" }}>
+        <div
+          style={{
+            display: "flex",
+            gap: "var(--spacing-4)",
+            marginTop: "var(--spacing-4)",
+          }}
+        >
+          <Link
+            to="/products"
+            className="button-primary"
+            style={{ textDecoration: "none", padding: "16px 32px" }}
+          >
             Shop Now <ArrowRight size={20} />
           </Link>
-          <Link to="/products?sortBy=price&order=asc" className="button-secondary" style={{ textDecoration: "none", padding: "16px 32px" }}>
+          <Link
+            to="/products?sortBy=price&order=asc"
+            className="button-secondary"
+            style={{ textDecoration: "none", padding: "16px 32px" }}
+          >
             View Deals
           </Link>
         </div>
@@ -103,9 +139,21 @@ const Home = () => {
         }}
       >
         {[
-          { icon: <Truck size={32} />, title: "Free Shipping", desc: "On all orders over ₹999" },
-          { icon: <ShieldCheck size={32} />, title: "Secure Payment", desc: "100% protected checkout" },
-          { icon: <Headphones size={32} />, title: "24/7 Support", desc: "Dedicated help center" },
+          {
+            icon: <Truck size={32} />,
+            title: "Free Shipping",
+            desc: "On all orders over ₹999",
+          },
+          {
+            icon: <ShieldCheck size={32} />,
+            title: "Secure Payment",
+            desc: "100% protected checkout",
+          },
+          {
+            icon: <Headphones size={32} />,
+            title: "24/7 Support",
+            desc: "Dedicated help center",
+          },
         ].map((item, index) => (
           <div
             key={index}
@@ -120,8 +168,22 @@ const Home = () => {
           >
             <div style={{ color: "var(--color-primary)" }}>{item.icon}</div>
             <div>
-              <h4 style={{ fontWeight: "var(--font-weight-bold)", marginBottom: "4px" }}>{item.title}</h4>
-              <p style={{ fontSize: "var(--font-size-sm)", color: "var(--color-text-muted)" }}>{item.desc}</p>
+              <h4
+                style={{
+                  fontWeight: "var(--font-weight-bold)",
+                  marginBottom: "4px",
+                }}
+              >
+                {item.title}
+              </h4>
+              <p
+                style={{
+                  fontSize: "var(--font-size-sm)",
+                  color: "var(--color-text-muted)",
+                }}
+              >
+                {item.desc}
+              </p>
             </div>
           </div>
         ))}
@@ -129,10 +191,26 @@ const Home = () => {
 
       {/* Featured Categories */}
       <section>
-        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end", marginBottom: "var(--spacing-6)" }}>
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "flex-end",
+            marginBottom: "var(--spacing-6)",
+          }}
+        >
           <div>
-            <h2 style={{ fontSize: "var(--font-size-2xl)", fontWeight: "var(--font-weight-bold)" }}>Shop by Category</h2>
-            <p style={{ color: "var(--color-text-muted)" }}>Find exactly what you're looking for</p>
+            <h2
+              style={{
+                fontSize: "var(--font-size-2xl)",
+                fontWeight: "var(--font-weight-bold)",
+              }}
+            >
+              Shop by Category
+            </h2>
+            <p style={{ color: "var(--color-text-muted)" }}>
+              Find exactly what you're looking for
+            </p>
           </div>
         </div>
 
@@ -144,9 +222,24 @@ const Home = () => {
           }}
         >
           {[
-            { name: "Electronics", items: "120+ Products", icon: <TrendingUp />, color: "#3b82f6" },
-            { name: "Fashion", items: "450+ Products", icon: <ShoppingBag />, color: "#ec4899" },
-            { name: "Home Living", items: "80+ Products", icon: <Star />, color: "#10b981" },
+            {
+              name: "Electronics",
+              items: "120+ Products",
+              icon: <TrendingUp />,
+              color: "#3b82f6",
+            },
+            {
+              name: "Fashion",
+              items: "450+ Products",
+              icon: <ShoppingBag />,
+              color: "#ec4899",
+            },
+            {
+              name: "Home Living",
+              items: "80+ Products",
+              icon: <Star />,
+              color: "#10b981",
+            },
           ].map((cat, i) => (
             <Link
               key={i}
@@ -171,21 +264,37 @@ const Home = () => {
                 e.currentTarget.style.borderColor = "rgba(255,255,255,0.5)";
               }}
             >
-              <div style={{ 
-                width: "50px", 
-                height: "50px", 
-                borderRadius: "12px", 
-                backgroundColor: cat.color + "20", 
-                color: cat.color,
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center"
-              }}>
+              <div
+                style={{
+                  width: "50px",
+                  height: "50px",
+                  borderRadius: "12px",
+                  backgroundColor: cat.color + "20",
+                  color: cat.color,
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                }}
+              >
                 {cat.icon}
               </div>
               <div>
-                <h3 style={{ fontSize: "var(--font-size-xl)", fontWeight: "var(--font-weight-bold)" }}>{cat.name}</h3>
-                <p style={{ color: "var(--color-text-muted)", fontSize: "var(--font-size-sm)" }}>{cat.items}</p>
+                <h3
+                  style={{
+                    fontSize: "var(--font-size-xl)",
+                    fontWeight: "var(--font-weight-bold)",
+                  }}
+                >
+                  {cat.name}
+                </h3>
+                <p
+                  style={{
+                    color: "var(--color-text-muted)",
+                    fontSize: "var(--font-size-sm)",
+                  }}
+                >
+                  {cat.items}
+                </p>
               </div>
             </Link>
           ))}
@@ -194,12 +303,38 @@ const Home = () => {
 
       {/* Latest Arrivals */}
       <section style={{ marginBottom: "var(--spacing-12)" }}>
-        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end", marginBottom: "var(--spacing-6)" }}>
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "flex-end",
+            marginBottom: "var(--spacing-6)",
+          }}
+        >
           <div>
-            <h2 style={{ fontSize: "var(--font-size-2xl)", fontWeight: "var(--font-weight-bold)" }}>Latest Arrivals</h2>
-            <p style={{ color: "var(--color-text-muted)" }}>Fresh picks just for you</p>
+            <h2
+              style={{
+                fontSize: "var(--font-size-2xl)",
+                fontWeight: "var(--font-weight-bold)",
+              }}
+            >
+              Latest Arrivals
+            </h2>
+            <p style={{ color: "var(--color-text-muted)" }}>
+              Fresh picks just for you
+            </p>
           </div>
-          <Link to="/products" style={{ color: "var(--color-primary)", textDecoration: "none", fontWeight: "var(--font-weight-bold)", display: "flex", alignItems: "center", gap: "4px" }}>
+          <Link
+            to="/products"
+            style={{
+              color: "var(--color-primary)",
+              textDecoration: "none",
+              fontWeight: "var(--font-weight-bold)",
+              display: "flex",
+              alignItems: "center",
+              gap: "4px",
+            }}
+          >
             View All <ArrowRight size={16} />
           </Link>
         </div>
@@ -219,9 +354,20 @@ const Home = () => {
             ))}
           </div>
         ) : (
-          <div className="glass" style={{ padding: "var(--spacing-10)", textAlign: "center" }}>
-            <p style={{ color: "var(--color-text-muted)" }}>New products are coming soon! Stay tuned.</p>
-            <Link to="/products" className="button-text" style={{ marginTop: "var(--spacing-4)" }}>Browse catalog</Link>
+          <div
+            className="glass"
+            style={{ padding: "var(--spacing-10)", textAlign: "center" }}
+          >
+            <p style={{ color: "var(--color-text-muted)" }}>
+              New products are coming soon! Stay tuned.
+            </p>
+            <Link
+              to="/products"
+              className="button-text"
+              style={{ marginTop: "var(--spacing-4)" }}
+            >
+              Browse catalog
+            </Link>
           </div>
         )}
       </section>

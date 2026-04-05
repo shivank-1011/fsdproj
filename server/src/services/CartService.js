@@ -40,7 +40,9 @@ class CartService {
       cart = await prisma.cart.create({ data: { userId } });
     }
 
-    const product = await prisma.product.findUnique({ where: { id: productId } });
+    const product = await prisma.product.findUnique({
+      where: { id: productId },
+    });
     if (!product) {
       const error = new Error("Product not found");
       error.statusCode = 404;
@@ -113,7 +115,10 @@ class CartService {
       throw error;
     }
 
-    await prisma.cartItem.update({ where: { id: cartItemId }, data: { quantity } });
+    await prisma.cartItem.update({
+      where: { id: cartItemId },
+      data: { quantity },
+    });
 
     return prisma.cart.findUnique({
       where: { id: cartItem.cartId },

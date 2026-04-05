@@ -29,7 +29,9 @@ class AuthController {
       res.status(200).json(data);
     } catch (error) {
       console.error("Google Auth Error:", error);
-      res.status(error.statusCode || 500).json({ error: error.message || "Google authentication failed" });
+      res
+        .status(error.statusCode || 500)
+        .json({ error: error.message || "Google authentication failed" });
     }
   };
 

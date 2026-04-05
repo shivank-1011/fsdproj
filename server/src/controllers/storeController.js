@@ -7,7 +7,10 @@ class StoreController {
 
   createStore = async (req, res) => {
     try {
-      const data = await this.storeService.createStore(req.user.userId, req.body);
+      const data = await this.storeService.createStore(
+        req.user.userId,
+        req.body,
+      );
       res.status(201).json(data);
     } catch (error) {
       res.status(error.statusCode || 500).json({ error: error.message });

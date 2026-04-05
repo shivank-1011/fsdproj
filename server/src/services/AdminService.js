@@ -27,28 +27,42 @@ class AdminService {
       prisma.user.count(),
     ]);
 
-    return { users, total, page: Number(page), totalPages: Math.ceil(total / Number(limit)) };
+    return {
+      users,
+      total,
+      page: Number(page),
+      totalPages: Math.ceil(total / Number(limit)),
+    };
   }
 
   /**
    * Bans a user by their ID.
    */
   async banUser(userId) {
-    await prisma.user.update({ where: { id: userId }, data: { isBanned: true } });
+    await prisma.user.update({
+      where: { id: userId },
+      data: { isBanned: true },
+    });
   }
 
   /**
    * Lifts a ban from a user by their ID.
    */
   async unbanUser(userId) {
-    await prisma.user.update({ where: { id: userId }, data: { isBanned: false } });
+    await prisma.user.update({
+      where: { id: userId },
+      data: { isBanned: false },
+    });
   }
 
   /**
    * Marks a store as verified/approved.
    */
   async approveStore(storeId) {
-    await prisma.store.update({ where: { id: storeId }, data: { isVerified: true } });
+    await prisma.store.update({
+      where: { id: storeId },
+      data: { isVerified: true },
+    });
   }
 
   /**
@@ -67,7 +81,12 @@ class AdminService {
       prisma.store.count(),
     ]);
 
-    return { stores, total, page: Number(page), totalPages: Math.ceil(total / Number(limit)) };
+    return {
+      stores,
+      total,
+      page: Number(page),
+      totalPages: Math.ceil(total / Number(limit)),
+    };
   }
 
   /**

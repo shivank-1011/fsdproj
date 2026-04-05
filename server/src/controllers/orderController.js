@@ -22,7 +22,10 @@ class OrderController {
 
   getUserOrders = async (req, res) => {
     try {
-      const data = await this.orderService.getUserOrders(req.user.userId, req.query);
+      const data = await this.orderService.getUserOrders(
+        req.user.userId,
+        req.query,
+      );
       res.json(data);
     } catch (error) {
       res.status(error.statusCode || 500).json({ error: error.message });

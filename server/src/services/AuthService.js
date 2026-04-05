@@ -3,7 +3,10 @@ const jwt = require("jsonwebtoken");
 const crypto = require("crypto");
 const { OAuth2Client } = require("google-auth-library");
 const { PrismaClient } = require("@prisma/client");
-const { generateAccessToken, generateRefreshToken } = require("../utils/tokens");
+const {
+  generateAccessToken,
+  generateRefreshToken,
+} = require("../utils/tokens");
 
 const prisma = new PrismaClient();
 const googleClient = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
@@ -35,7 +38,12 @@ class AuthService {
     });
 
     return {
-      user: { id: user.id, email: user.email, name: user.name, role: user.role },
+      user: {
+        id: user.id,
+        email: user.email,
+        name: user.name,
+        role: user.role,
+      },
       accessToken,
       refreshToken,
     };
@@ -69,7 +77,12 @@ class AuthService {
     });
 
     return {
-      user: { id: user.id, email: user.email, name: user.name, role: user.role },
+      user: {
+        id: user.id,
+        email: user.email,
+        name: user.name,
+        role: user.role,
+      },
       accessToken,
       refreshToken,
     };
@@ -125,7 +138,13 @@ class AuthService {
   async getMe(userId) {
     const user = await prisma.user.findUnique({
       where: { id: userId },
-      select: { id: true, email: true, name: true, role: true, createdAt: true },
+      select: {
+        id: true,
+        email: true,
+        name: true,
+        role: true,
+        createdAt: true,
+      },
     });
     return { user };
   }
@@ -161,7 +180,12 @@ class AuthService {
     });
 
     return {
-      user: { id: user.id, email: user.email, name: user.name, role: user.role },
+      user: {
+        id: user.id,
+        email: user.email,
+        name: user.name,
+        role: user.role,
+      },
       accessToken,
       refreshToken,
     };

@@ -9,7 +9,11 @@ class ProductService {
    * Handles Cloudinary image uploads and URL image merging.
    * @returns {{ product }}
    */
-  async createProduct({ name, description, price, stock, images }, files, userId) {
+  async createProduct(
+    { name, description, price, stock, images },
+    files,
+    userId,
+  ) {
     const store = await prisma.store.findUnique({ where: { userId } });
 
     if (!store) {
@@ -19,32 +23,35 @@ class ProductService {
     }
 
     if (!store.isVerified) {
-      const error = new Error("Store is not verified. Please wait for admin approval.");
+      const error = new Error(
+        "Store is not verified. Please wait for admin approval.",
+      );
       error.statusCode = 403;
       throw error;
     }
 
     let imageUrls = [];
     if (files && files.length > 0) {
-      const uploadPromises = files.map((file) =>
-        new Promise((resolve, reject) => {
-          const uploadStream = cloudinary.uploader.upload_stream(
-            {
-              resource_type: "image",
-              folder: "products",
-              transformation: [
-                { width: 1000, crop: "scale" },
-                { quality: "auto" },
-                { fetch_format: "auto" },
-              ],
-            },
-            (error, result) => {
-              if (error) reject(error);
-              else resolve(result.secure_url);
-            },
-          );
-          uploadStream.end(file.buffer);
-        }),
+      const uploadPromises = files.map(
+        (file) =>
+          new Promise((resolve, reject) => {
+            const uploadStream = cloudinary.uploader.upload_stream(
+              {
+                resource_type: "image",
+                folder: "products",
+                transformation: [
+                  { width: 1000, crop: "scale" },
+                  { quality: "auto" },
+                  { fetch_format: "auto" },
+                ],
+              },
+              (error, result) => {
+                if (error) reject(error);
+                else resolve(result.secure_url);
+              },
+            );
+            uploadStream.end(file.buffer);
+          }),
       );
       imageUrls = await Promise.all(uploadPromises);
     }
@@ -75,7 +82,15 @@ class ProductService {
    * Returns a paginated, filtered, and sorted list of products.
    * @returns {{ products, total, page, totalPages }}
    */
-  async getProducts({ page = 1, limit = 10, search, minPrice, maxPrice, sortBy, order = "asc" }) {
+  async getProducts({
+    page = 1,
+    limit = 10,
+    search,
+    minPrice,
+    maxPrice,
+    sortBy,
+    order = "asc",
+  }) {
     const pageNum = parseInt(page);
     const limitNum = parseInt(limit);
     const skip = (pageNum - 1) * limitNum;
@@ -110,7 +125,12 @@ class ProductService {
       prisma.product.count({ where }),
     ]);
 
-    return { products, total, page: pageNum, totalPages: Math.ceil(total / limitNum) };
+    return {
+      products,
+      total,
+      page: pageNum,
+      totalPages: Math.ceil(total / limitNum),
+    };
   }
 
   /**

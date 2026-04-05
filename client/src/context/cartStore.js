@@ -45,7 +45,10 @@ export const useCartStore = create((set, get) => ({
     }
 
     try {
-      const response = await cartApiService.updateQuantity(cartItemId, newQuantity);
+      const response = await cartApiService.updateQuantity(
+        cartItemId,
+        newQuantity,
+      );
       set({ cart: response });
     } catch (error) {
       set({
