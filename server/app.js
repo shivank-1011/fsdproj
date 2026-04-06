@@ -12,10 +12,16 @@ const app = express();
 
 app.use(
   cors({
-    origin: process.env.CLIENT_URL || "http://localhost:5173",
+    origin: [
+      process.env.CLIENT_URL,
+      "http://localhost:5173",
+      "http://127.0.0.1:5173",
+      "http://51.20.138.119:5173",
+    ].filter(Boolean), // This prevents errors if CLIENT_URL is undefined
     credentials: true,
   }),
 );
+
 app.use(helmet());
 app.use(morgan("dev"));
 app.use(express.json());
