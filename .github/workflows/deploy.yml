@@ -28,6 +28,9 @@ jobs:
       - name: Build Client
         run: npm run build
         working-directory: ./client
+        env:
+          VITE_API_URL: ${{ secrets.VITE_API_URL }}
+
 
       # Use SCP to safely sync files into EC2
       # Required repository secrets: EC2_HOST, EC2_USERNAME, EC2_PRIVATE_KEY
