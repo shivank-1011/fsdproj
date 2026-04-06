@@ -554,8 +554,18 @@ h6 {
     order: 4; /* Place below the search form */
   }
 
-  /* Increase specificity to override other display:none !important rules */
   nav.main-nav.mobile-open {
     display: flex !important;
+  }
+}
+
+/* Account Page Layout */
+.account-layout {
+  grid-template-columns: 300px 1fr;
+}
+
+@media (max-width: 768px) {
+  .account-layout {
+    grid-template-columns: 1fr !important;
   }
 }

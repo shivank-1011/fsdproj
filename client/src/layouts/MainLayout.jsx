@@ -151,6 +151,34 @@ const MainLayout = () => {
             </Link>
           )}
           <Link
+            to="/account"
+            onClick={() => setIsMobileMenuOpen(false)}
+            title="My Account"
+            style={{
+              textDecoration: "none",
+              color: "var(--color-text)",
+              position: "relative",
+              display: "flex",
+              alignItems: "center",
+            }}
+          >
+            <div
+              style={{
+                width: "36px",
+                height: "36px",
+                borderRadius: "var(--radius-full)",
+                background:
+                  "linear-gradient(135deg, var(--color-primary), var(--color-primary-hover))",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                boxShadow: "0 2px 8px rgba(235, 94, 40, 0.3)",
+              }}
+            >
+              <User size={18} color="#ffffff" />
+            </div>
+          </Link>
+          <Link
             to="/cart"
             onClick={() => setIsMobileMenuOpen(false)}
             style={{

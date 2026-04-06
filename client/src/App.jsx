@@ -11,6 +11,7 @@ import GuestRoute from "./components/GuestRoute";
 import Products from "./pages/Products";
 import ProductDetails from "./pages/ProductDetails";
 import Cart from "./pages/Cart";
+import MyAccount from "./pages/MyAccount";
 
 import SellerRoutes from "./components/SellerRoutes";
 import SellerLayout from "./layouts/SellerLayout";
@@ -84,6 +85,7 @@ function App() {
           <Route path="products" element={<Products />} />
           <Route path="products/:id" element={<ProductDetails />} />
           <Route path="cart" element={<Cart />} />
+          <Route path="account" element={<MyAccount />} />
         </Route>
       </Route>
 
