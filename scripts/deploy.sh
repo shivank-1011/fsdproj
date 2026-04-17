@@ -40,12 +40,8 @@ fi
 echo "Setting up client..."
 cd "$APP_DIR/client" || exit 1
 
-# Install ALL deps (vite is a devDependency required for the build step)
-npm ci --quiet
-
-# Build the React app to generate/update the dist/ folder
-echo "Building client..."
-npm run build
+# The build artifacts (dist folder) are already prepared and uploaded via GitHub Actions
+echo "Serving client from dist/..."
 
 # Restart or Start the static file server using PM2
 if pm2 show fsd-client > /dev/null 2>&1; then
