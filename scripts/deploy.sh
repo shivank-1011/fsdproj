@@ -24,11 +24,11 @@ fi
 echo "Setting up server..."
 cd "$APP_DIR/server" || exit 1
 
-# Install only production dependencies idempotently (cleans node_modules, installs exact tree)
-npm ci --production --quiet
+# Install all deps (prisma is a devDependency but needed for `prisma generate`)
+npm ci --quiet
 
 # Restart or Start the server using PM2
-if pm2 show fsd-server > /dev/null; then
+if pm2 show fsd-server > /dev/null 2>&1; then
     echo "Restarting existing PM2 process 'fsd-server'..."
     pm2 restart fsd-server
 else
@@ -40,9 +40,15 @@ fi
 echo "Setting up client..."
 cd "$APP_DIR/client" || exit 1
 
-# If utilizing a static PM2 server for a built react client (SPA):
-# The built artifacts (dist folder) will be prepared and synced via CI before running this script
-if pm2 show fsd-client > /dev/null; then
+# Install ALL deps (vite is a devDependency required for the build step)
+npm ci --quiet
+
+# Build the React app to generate/update the dist/ folder
+echo "Building client..."
+npm run build
+
+# Restart or Start the static file server using PM2
+if pm2 show fsd-client > /dev/null 2>&1; then
     echo "Restarting existing PM2 process 'fsd-client'..."
     pm2 restart fsd-client
 else
