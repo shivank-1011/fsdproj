@@ -55,7 +55,7 @@ jobs:
           script: |
             cat > /home/ubuntu/fsdproj/server/.env << 'EOF'
             PORT=5001
-            CLIENT_URL=http://${{ secrets.EC2_HOST }}:5173
+            CLIENT_URL=http://${{ secrets.EC2_HOST }}.sslip.io:5173
             DATABASE_URL=${{ secrets.DATABASE_URL }}
             DIRECT_URL=${{ secrets.DIRECT_URL }}
             ACCESS_TOKEN_SECRET=${{ secrets.ACCESS_TOKEN_SECRET }}
