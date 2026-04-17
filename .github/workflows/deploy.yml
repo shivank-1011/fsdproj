@@ -11,7 +11,7 @@ jobs:
     
     steps:
       - name: Checkout Code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       # Build client on CI/CD runner to avoid taxing the EC2 server resources
       - name: Setup Node.js (Client Build)
