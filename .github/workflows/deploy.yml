@@ -30,6 +30,7 @@ jobs:
         working-directory: ./client
         env:
           VITE_API_URL: ${{ secrets.VITE_API_URL }}
+          VITE_GOOGLE_CLIENT_ID: ${{ secrets.GOOGLE_CLIENT_ID }}
 
 
       # Use SCP to safely sync files into EC2
